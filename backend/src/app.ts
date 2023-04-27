@@ -30,11 +30,10 @@ async function start(): Promise<void> {
   });
 
   const server = app.listen(PORT, () => console.log(`Running on port ${PORT}`));
-
   const io = new Server(server, { cors: { origin: '*' } });
 
   io.on('connection', (socket) => {
-    socket.on('msg', (data) => {
+    socket.on('message', (data) => {
       console.log(data);
     });
   });
