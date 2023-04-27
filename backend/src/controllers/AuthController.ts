@@ -1,4 +1,12 @@
-import { BadRequestError, Body, JsonController, Post, Res } from 'routing-controllers';
+import {
+  Authorized,
+  BadRequestError,
+  Body,
+  Get,
+  JsonController,
+  Post,
+  Res,
+} from 'routing-controllers';
 import UserModel, { IUser } from '../models/UserModel';
 import bcrypt from 'bcrypt';
 import { AUTH_ERROR, JWT_SECRET } from '../utils/constants';
@@ -22,5 +30,26 @@ export class AuthController {
     const token = jwt.sign({ id: find.id }, JWT_SECRET, { expiresIn: '7d' });
 
     return { token };
+  }
+
+  @Post('/signup')
+  private async getUserMe(@Body() { name, email, password, login }: IUser) {
+    email = email.toLowerCase();
+    login = login.toLowerCase();
+    const find = await UserModel.findOne({ $or: [{ email }, { login }] })
+      .select('+email')
+      .exec();
+    if (find != null) {
+      throw new BadRequestError(
+        `Пользователь уже существует с ${email === find.email ? 'такой почтой' : 'таким логином'}`,
+      );
+    }
+
+    const hashedPass = await bcrypt.hash(password, 10);
+    const user = new UserModel({ name, email, password: hashedPass, login });
+    await user.validate();
+    await user.save();
+
+    return user;
   }
 }
