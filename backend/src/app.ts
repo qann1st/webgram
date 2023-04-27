@@ -12,6 +12,8 @@ import { HttpErrorHandler } from './middlewares/HttpErrorHandler';
 import { DefaultErrorHandler } from './middlewares/DefaultErrorHandler';
 import currentUserChecker from './checkers/currentUser';
 import { UsersController } from './controllers/UsersController';
+import MessageModel, { IMessage } from './models/MessageModel';
+import { MessagesController } from './controllers/MessagesController';
 
 dotenv.config();
 
@@ -22,7 +24,7 @@ async function start(): Promise<void> {
   const app = createExpressServer({
     cors: true,
     middlewares: [AuthErrorHandler, DefaultErrorHandler, HttpErrorHandler],
-    controllers: [AuthController, UsersController],
+    controllers: [AuthController, UsersController, MessagesController],
     authorizationChecker,
     currentUserChecker,
     defaultErrorHandler: false,
@@ -33,8 +35,17 @@ async function start(): Promise<void> {
   const io = new Server(server, { cors: { origin: '*' } });
 
   io.on('connection', (socket) => {
-    socket.on('message', (data) => {
-      console.log(data);
+    socket.on('join', ({ roomId }: { roomId: string }) => {
+      socket.join(roomId);
+    });
+
+    socket.on('message', async ({ owner, text, roomId }: IMessage) => {
+      const message: IMessage = await MessageModel.create({ owner, text, roomId });
+      socket.to(roomId).emit('message', message);
+    });
+
+    socket.on('leave', ({ roomId }: { roomId: string }) => {
+      socket.leave(roomId);
     });
   });
 }
