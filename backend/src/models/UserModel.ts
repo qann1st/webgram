@@ -4,6 +4,7 @@ import { BadRequestError } from 'routing-controllers';
 export interface IUser {
   name: string;
   login: string;
+  avatar: string;
   email: string;
   password: string;
 }
@@ -31,6 +32,12 @@ const userSchema = new mongoose.Schema<IUser, IUserModel>({
       },
       ({ value }: { value: string }) => `${value} is not a valid login`,
     ],
+  },
+  avatar: {
+    type: String,
+    required: true,
+    default:
+      'https://kartinkin.net/pics/uploads/posts/2022-09/thumbs/1662405711_5-kartinkin-net-p-ikonka-cheloveka-minimalizm-vkontakte-5.png',
   },
   email: {
     type: String,
