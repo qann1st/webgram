@@ -1,7 +1,7 @@
 import { BadRequestError, Body, JsonController, Post, Res } from 'routing-controllers';
 import UserModel, { IUser } from '../models/UserModel';
 import bcrypt from 'bcrypt';
-import { AUTH_ERROR, JWT_SECRET } from 'src/utils/constants';
+import { AUTH_ERROR, JWT_SECRET } from '../utils/constants';
 import jwt from 'jsonwebtoken';
 
 @JsonController('', { transformResponse: false })
