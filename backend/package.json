@@ -27,6 +27,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.3",
     "nodemon": "^2.0.22",
+    "reflect-metadata": "^0.1.13",
     "routing-controllers": "^0.10.3",
     "socket.io": "^4.6.1",
     "ts-node": "^10.9.1",

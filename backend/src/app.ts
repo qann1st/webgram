@@ -1,10 +1,17 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import 'reflect-metadata';
 import { createExpressServer } from 'routing-controllers';
 import { MONGODB_URL, PORT } from './utils/constants';
 import { Server } from 'socket.io';
-import { createServer } from 'http';
 import { AuthController } from './controllers/AuthController';
+import authorizationChecker from './checkers/authorization';
+import path from 'path';
+import { AuthErrorHandler } from './middlewares/AuthErrorHandler';
+import { HttpErrorHandler } from './middlewares/HttpErrorHandler';
+import { DefaultErrorHandler } from './middlewares/DefaultErrorHandler';
+import currentUserChecker from './checkers/currentUser';
+import { UsersController } from './controllers/UsersController';
 
 dotenv.config();
 
@@ -14,8 +21,10 @@ async function start(): Promise<void> {
 
   const app = createExpressServer({
     cors: true,
-    middlewares: [],
-    controllers: [AuthController],
+    middlewares: [AuthErrorHandler, DefaultErrorHandler, HttpErrorHandler],
+    controllers: [AuthController, UsersController],
+    authorizationChecker,
+    currentUserChecker,
     defaultErrorHandler: false,
     validation: true,
   });
@@ -27,7 +36,6 @@ async function start(): Promise<void> {
   io.on('connection', (socket) => {
     socket.on('msg', (data) => {
       console.log(data);
-      socket.emit('msg', 'zhopa');
     });
   });
 }
