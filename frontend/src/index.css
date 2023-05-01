@@ -1,9 +1,10 @@
-* {
-  font-family: sans-serif;
-  font-weight: light;
-}
-
 body {
   font-family: sans-serif;
   font-weight: light;
+  margin: 0;
+  overflow: hidden;
+}
+
+*::placeholder {
+  color: gray;
 }

@@ -1,14 +1,22 @@
 import mongoose from 'mongoose';
 
+export interface IUser {
+  _id?: string;
+  name?: string;
+  login?: string;
+  avatar?: string;
+}
+
 export interface IMessage {
-  owner: string;
+  owner: IUser;
   text: string;
   roomId: string;
+  timestamp: number;
 }
 
 const messageSchema = new mongoose.Schema<IMessage>({
   owner: {
-    type: String,
+    type: Object,
     required: true,
   },
   text: {
@@ -18,6 +26,10 @@ const messageSchema = new mongoose.Schema<IMessage>({
   },
   roomId: {
     type: String,
+    required: true,
+  },
+  timestamp: {
+    type: Number,
     required: true,
   },
 });

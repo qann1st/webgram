@@ -24,7 +24,7 @@ export default function ColorSchemeToggle({ onClick, sx, ...props }: IconButtonP
       sx={{ position: 'absolute', right: '10px', top: '10px' }}
       color="neutral"
       {...props}
-      onClick={(e: HTMLButtonElement) => {
+      onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if (mode === 'light') {
           setMode('dark');
         } else {

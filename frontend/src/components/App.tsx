@@ -14,7 +14,7 @@ const theme = extendTheme({
     dark: {
       palette: {
         primary: {
-          solidActiveBg: undefined,
+          400: '#131318',
         },
       },
     },
