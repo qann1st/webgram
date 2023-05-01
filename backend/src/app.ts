@@ -22,7 +22,7 @@ async function start(): Promise<void> {
   await mongoose.connect(MONGODB_URL);
 
   const app = createExpressServer({
-    cors: true,
+    cors: { origin: '*' },
     middlewares: [AuthErrorHandler, DefaultErrorHandler, HttpErrorHandler],
     controllers: [AuthController, UsersController, MessagesController],
     authorizationChecker,
@@ -40,8 +40,9 @@ async function start(): Promise<void> {
     });
 
     socket.on('message', async ({ owner, text, roomId }: IMessage) => {
-      const message: IMessage = await MessageModel.create({ owner, text, roomId });
-      socket.to(roomId).emit('message', message);
+      const timestamp = new Date();
+      const message: IMessage = await MessageModel.create({ owner, text, roomId, timestamp });
+      socket.emit('message', message);
     });
 
     socket.on('leave', ({ roomId }: { roomId: string }) => {

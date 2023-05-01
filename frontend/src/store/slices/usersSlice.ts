@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export interface UsersState {
+export interface UserState {
   data: Array<object> | null;
 }
 
-const initialState: UsersState = {
+const initialState: UserState = {
   data: null,
 };
 
@@ -13,7 +13,7 @@ const usersSlice = createSlice({
   initialState,
   reducers: {
     setUsersList(state, action) {
-      state.data = action.payload.users;
+      state.data = action.payload;
     },
   },
 });
