@@ -1,12 +1,4 @@
-import {
-  Authorized,
-  BadRequestError,
-  Body,
-  Get,
-  JsonController,
-  Post,
-  Res,
-} from 'routing-controllers';
+import { BadRequestError, Body, JsonController, Post, Res } from 'routing-controllers';
 import UserModel, { IUser } from '../models/UserModel';
 import bcrypt from 'bcrypt';
 import { AUTH_ERROR, JWT_SECRET } from '../utils/constants';
@@ -33,7 +25,7 @@ export class AuthController {
   }
 
   @Post('/signup')
-  private async getUserMe(@Body() { name, email, password, login }: IUser) {
+  private async signup(@Body() { name, email, password, login }: IUser) {
     email = email.toLowerCase();
     login = login.toLowerCase();
     const find = await UserModel.findOne({ $or: [{ email }, { login }] })

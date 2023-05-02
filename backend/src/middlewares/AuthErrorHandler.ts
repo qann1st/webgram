@@ -7,7 +7,6 @@ import { BAD_TOKEN, UNAUTHORIZED_ERR_CODE } from '../utils/constants';
 export class AuthErrorHandler implements ExpressErrorMiddlewareInterface {
   error(error: any, req: any, res: Response, next: (err?: any) => any): void {
     if (error instanceof JsonWebTokenError) {
-      console.log(error);
       res.status(UNAUTHORIZED_ERR_CODE).send({ message: BAD_TOKEN });
       return;
     }

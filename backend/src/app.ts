@@ -42,6 +42,7 @@ async function start(): Promise<void> {
     socket.on('message', async ({ owner, text, roomId }: IMessage) => {
       const timestamp = new Date();
       const message: IMessage = await MessageModel.create({ owner, text, roomId, timestamp });
+      socket.to(roomId).emit('message', message);
       socket.emit('message', message);
     });
 

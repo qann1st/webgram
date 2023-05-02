@@ -4,8 +4,14 @@ import MessageModel from '../models/MessageModel';
 @JsonController('/messages', { transformResponse: false })
 export class MessagesController {
   @Get('/:roomId')
-  private getRoomMessages(@Params() { roomId }: { roomId: string }) {
-    const messages = MessageModel.find({ roomId });
+  private async getRoomMessages(@Params() { roomId }: { roomId: string }) {
+    const messages = await MessageModel.find({ roomId });
     return messages;
+  }
+
+  @Get('/last/:roomId')
+  private async getLastMessage(@Params() { roomId }: { roomId: string }) {
+    const messages: any = await MessageModel.find({ roomId });
+    return messages[messages.length - 1];
   }
 }

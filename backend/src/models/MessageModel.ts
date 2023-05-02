@@ -22,7 +22,7 @@ const messageSchema = new mongoose.Schema<IMessage>({
   text: {
     type: String,
     required: true,
-    minLength: 2,
+    minLength: 1,
   },
   roomId: {
     type: String,
