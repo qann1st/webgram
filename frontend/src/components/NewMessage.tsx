@@ -6,15 +6,15 @@ import { useParams } from 'react-router';
 import { useState } from 'react';
 
 const NewMessage = () => {
-  const { data } = useAppSelector((state) => state.user);
+  const { user } = useAppSelector((state) => state.user);
   const { id } = useParams();
   const [value, setValue] = useState('');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (value.length > 0) {
+    if (value.length > 2) {
       socket.emit('message', {
-        owner: data,
+        owner: user,
         text: value,
         roomId: id,
       });
@@ -23,23 +23,30 @@ const NewMessage = () => {
   };
 
   return (
-    <Box sx={{ position: 'sticky', bottom: 5, margin: '0 5px' }}>
-      <Box component="form" onSubmit={handleSubmit} sx={{ position: 'relative' }}>
-        <Input size="lg" onChange={(e) => setValue(e.target.value)} value={value} />
-        <IconButton
-          type="submit"
-          sx={{
-            position: 'absolute',
-            top: 4,
-            right: 5,
-            cursor: 'pointer',
-            backgroundColor: 'transparent',
-            '&:hover': {
+    <Box sx={{ position: 'sticky', bottom: 0, margin: '0 5px' }}>
+      <Box
+        sx={{
+          backgroundColor: (theme) => theme.palette.primary[400],
+          padding: '0 5px 5px',
+          boxSizing: 'content-box',
+        }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ position: 'relative' }}>
+          <Input size="lg" onChange={(e) => setValue(e.target.value)} value={value} />
+          <IconButton
+            type="submit"
+            sx={{
+              position: 'absolute',
+              top: 4,
+              right: 5,
+              cursor: 'pointer',
               backgroundColor: 'transparent',
-            },
-          }}>
-          <Send />
-        </IconButton>
+              '&:hover': {
+                backgroundColor: 'transparent',
+              },
+            }}>
+            <Send />
+          </IconButton>
+        </Box>
       </Box>
     </Box>
   );

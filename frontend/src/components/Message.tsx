@@ -12,7 +12,7 @@ interface IPropsMessage {
 
 const Message: FC<IPropsMessage> = ({ owner, text, timestamp }) => {
   const rtf = intlFormatDistance(new Date(timestamp), Date.now(), { locale: 'ru' });
-  const { data } = useAppSelector((state) => state.user);
+  const { user } = useAppSelector((state) => state.user);
 
   return (
     <Box
@@ -22,7 +22,7 @@ const Message: FC<IPropsMessage> = ({ owner, text, timestamp }) => {
         margin: '20px 0 0',
         gap: 1,
         justifyContent: 'flex-start',
-        ...(owner?._id === data?._id && {
+        ...(owner?._id === user?._id && {
           flexDirection: 'row-reverse',
         }),
       }}>
@@ -51,7 +51,7 @@ const Message: FC<IPropsMessage> = ({ owner, text, timestamp }) => {
         <Box
           sx={{
             display: 'flex',
-            ...(owner?._id === data && {
+            ...(owner._id === user?._id && {
               justifyContent: 'end',
               width: 'max-content',
             }),

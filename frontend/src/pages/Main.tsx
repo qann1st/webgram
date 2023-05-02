@@ -1,10 +1,8 @@
-import { FC, useEffect, useState, useRef, useCallback } from 'react';
+import { FC, useEffect, useState, useRef } from 'react';
 import { Box, Divider, Typography } from '@mui/joy';
 import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import DialogList from '../components/DialogList';
-import { useColorScheme } from '@mui/joy/styles';
-import { useAppSelector } from '../hooks';
-import { IUser } from '../utils/types';
+import { IMessage } from '../utils/types';
 import { useAppDispatch } from '../hooks/index';
 import { setUser } from '../store/slices/userSlice';
 import { getUserMe } from '../utils/Api';
@@ -12,17 +10,17 @@ import { useParams } from 'react-router';
 import Chat from '../components/Chat';
 
 const Main: FC = () => {
-  const { data } = useAppSelector((state) => state.users);
   const dispatch = useAppDispatch();
-  const [users, setUsers] = useState<Array<IUser>>([]);
   const params = useParams();
   const [isResize, setIsResize] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = useState<IMessage[]>([]);
 
   useEffect(() => {
     getUserMe().then((user) => {
       dispatch(setUser(user));
     });
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -37,13 +35,8 @@ const Main: FC = () => {
       window.removeEventListener('mousemove', resizeSidebar);
       window.removeEventListener('mouseup', resize);
     };
+    // eslint-disable-next-line
   }, [isResize]);
-
-  useEffect(() => {
-    if (data) {
-      setUsers(data);
-    }
-  }, [data]);
 
   const resizeSidebar = (e: MouseEvent) => {
     e.preventDefault();
@@ -58,7 +51,7 @@ const Main: FC = () => {
     <Box sx={{ minHeight: '100vh', display: 'flex' }}>
       <ColorSchemeToggle />
       <Box style={{ maxWidth: '500px', minWidth: '200px', flex: 1 }} ref={sidebarRef}>
-        <DialogList users={users} />
+        <DialogList messages={messages} />
       </Box>
       <Divider
         onMouseDown={() => setIsResize(true)}
@@ -79,9 +72,10 @@ const Main: FC = () => {
           width: '100%',
           backgroundColor: (theme) => theme.palette.primary[400],
           flex: 1,
+          minHeight: '100vh',
         }}>
         {params.id ? (
-          <Chat />
+          <Chat messages={messages} setMessages={setMessages} />
         ) : (
           <Box
             sx={{
