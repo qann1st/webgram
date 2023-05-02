@@ -1,23 +1,35 @@
-import { FC } from 'react';
-import { IMessage } from '../utils/types';
+import { FC, useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/joy';
 import { Link } from 'react-router-dom';
 import { useColorScheme } from '@mui/joy/styles';
 import { useAppSelector } from '../hooks';
+import { getLastMessage } from '../utils/Api';
 
 interface IDialogProps {
   name: string;
   _id: string;
   avatar: string;
-  messages: IMessage;
 }
 
-const Dialog: FC<IDialogProps> = ({ name, _id, avatar, messages }) => {
+const Dialog: FC<IDialogProps> = ({ name, _id, avatar }) => {
   const { mode } = useColorScheme();
   const { user } = useAppSelector((state) => state.user);
+  const [lastMessage, setLastMessage] = useState('');
+
+  useEffect(() => {
+    getLastMessage(`${_id}${user?._id}`).then((res) => {
+      setLastMessage(res.text);
+    });
+  }, []);
 
   return (
-    <Link style={{ textDecoration: 'none' }} to={`/messages/${_id}${user?._id}`}>
+    <Link
+      style={{ textDecoration: 'none' }}
+      to={
+        user?._id !== undefined && user?._id > _id
+          ? `/messages/${_id}${user?._id}`
+          : `/messages/${user?._id}${_id}`
+      }>
       <Box
         sx={{
           display: 'flex',
@@ -25,6 +37,7 @@ const Dialog: FC<IDialogProps> = ({ name, _id, avatar, messages }) => {
           gap: 1,
           padding: '10px',
           cursor: 'pointer',
+          transition: 'all 0.1s linear',
           '&:hover': {
             backgroundColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.04)',
           },
@@ -42,7 +55,7 @@ const Dialog: FC<IDialogProps> = ({ name, _id, avatar, messages }) => {
               overflow: 'hidden',
               maxWidth: '320px',
             }}>
-            {messages?.text}
+            {lastMessage}
           </Typography>
         </Box>
       </Box>
