@@ -1,28 +1,51 @@
-import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import Main from '../pages/Main';
 import { Navigate, Routes } from 'react-router';
 import { Route } from 'react-router';
-import { getUsers } from '../utils/Api';
-import { useAppDispatch } from '../hooks';
-import { setUsersList } from '../store/slices/usersSlice';
+import { getUserMe } from '../utils/Api';
+import { useAppSelector } from '../hooks';
+import PrivateOutlet from './PrivateOutlet';
+import AuthOutlet from './AuthOutlet';
+import Auth from '../pages/Auth';
+import { useEffect, useState } from 'react';
+import { useAppDispatch } from '../hooks/index';
+import { setUser } from '../store/slices/userSlice';
+import Loader from './Loader';
 
 export const socket = io('http://localhost:4000');
 
 function AppRouter() {
+  const isAuth = useAppSelector((state) => state.user.isAuth);
   const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getUsers().then((users) => {
-      dispatch(setUsersList(users));
-    });
+    getUserMe()
+      .then((user) => {
+        if (user !== undefined) {
+          dispatch(setUser(user));
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
     // eslint-disable-next-line
   }, []);
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <Routes>
-      <Route path="/messages" element={<Main />} />
-      <Route path="/messages/:id" element={<Main />} />
+      <Route element={<PrivateOutlet isAuth={isAuth} />}>
+        <Route path="/messages" element={<Main />} />
+        <Route path="/messages/:id" element={<Main />} />
+      </Route>
+      <Route element={<AuthOutlet isAuth={isAuth} />}>
+        <Route path="/sign-in" element={<Auth />} />
+        <Route path="/sign-up" />
+      </Route>
       <Route path="*" element={<Navigate to="/messages" />} />
     </Routes>
   );

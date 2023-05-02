@@ -12,7 +12,7 @@ const NewMessage = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (value.length > 2) {
+    if (value.length > 0) {
       socket.emit('message', {
         owner: user,
         text: value,

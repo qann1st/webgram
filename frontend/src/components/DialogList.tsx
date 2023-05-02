@@ -1,14 +1,10 @@
 import { FC } from 'react';
 import { Box } from '@mui/joy';
 import Dialog from './Dialog';
-import { IMessage, IUser } from '../utils/types';
+import { IUser } from '../utils/types';
 import { useAppSelector } from '../hooks';
 
-interface ISearchProps {
-  messages: IMessage[];
-}
-
-const DialogList: FC<ISearchProps> = ({ messages }) => {
+const DialogList: FC = () => {
   const { user } = useAppSelector((state) => state.user);
   const { users } = useAppSelector((state) => state.users);
 
@@ -32,13 +28,7 @@ const DialogList: FC<ISearchProps> = ({ messages }) => {
       {users
         ?.filter((us) => us._id !== user?._id)
         .map((user: IUser) => (
-          <Dialog
-            key={user._id}
-            _id={user._id}
-            name={user.name}
-            avatar={user.avatar}
-            messages={messages[messages.length - 1]}
-          />
+          <Dialog key={user._id} _id={user._id} name={user.name} avatar={user.avatar} />
         ))}
     </Box>
   );

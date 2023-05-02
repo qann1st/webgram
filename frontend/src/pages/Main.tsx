@@ -4,10 +4,10 @@ import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import DialogList from '../components/DialogList';
 import { IMessage } from '../utils/types';
 import { useAppDispatch } from '../hooks/index';
-import { setUser } from '../store/slices/userSlice';
-import { getUserMe } from '../utils/Api';
+import { getUsers } from '../utils/Api';
 import { useParams } from 'react-router';
 import Chat from '../components/Chat';
+import { setUsersList } from '../store/slices/usersSlice';
 
 const Main: FC = () => {
   const dispatch = useAppDispatch();
@@ -17,9 +17,10 @@ const Main: FC = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
 
   useEffect(() => {
-    getUserMe().then((user) => {
-      dispatch(setUser(user));
+    getUsers().then((users) => {
+      dispatch(setUsersList(users));
     });
+
     // eslint-disable-next-line
   }, []);
 
@@ -51,7 +52,7 @@ const Main: FC = () => {
     <Box sx={{ minHeight: '100vh', display: 'flex' }}>
       <ColorSchemeToggle />
       <Box style={{ maxWidth: '500px', minWidth: '200px', flex: 1 }} ref={sidebarRef}>
-        <DialogList messages={messages} />
+        <DialogList />
       </Box>
       <Divider
         onMouseDown={() => setIsResize(true)}

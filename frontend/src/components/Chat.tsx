@@ -1,11 +1,12 @@
-import { Dispatch, FC, memo, useEffect, useRef } from 'react';
+import { Dispatch, FC, memo, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { getRoomMessages } from '../utils/Api';
 import { IMessage } from '../utils/types';
 import { Box, Typography } from '@mui/joy';
 import { socket } from './AppRouter';
 import NewMessage from './NewMessage';
 import Message from './Message';
+import { getRoomMessages } from '../utils/Api';
+import Loader from './Loader';
 
 interface IChatProps {
   messages: IMessage[];
@@ -14,19 +15,21 @@ interface IChatProps {
 
 const Chat: FC<IChatProps> = ({ messages, setMessages }) => {
   const params = useParams();
-  const scrollRef = useRef<HTMLDivElement>();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getRoomMessages(params.id).then((data) => {
-      setMessages(data);
-    });
+    getRoomMessages(params.id)
+      .then((data) => {
+        setMessages(data);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
 
     socket.emit('join', { roomId: params.id });
 
     socket.on('message', (message: IMessage) => {
       if (message.roomId === params.id) {
-        console.log([...messages, message]);
-
         setMessages((prev) => [...prev, message]);
       }
     });
@@ -37,11 +40,9 @@ const Chat: FC<IChatProps> = ({ messages, setMessages }) => {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView();
-    }
-  }, [messages]);
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -62,7 +63,7 @@ const Chat: FC<IChatProps> = ({ messages, setMessages }) => {
             height: '100vh',
             paddingBottom: '70px',
           }}>
-          {messages.map((message: IMessage) => (
+          {messages.map((message: IMessage, i) => (
             <Message
               key={message._id}
               owner={message.owner}
