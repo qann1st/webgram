@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../hooks/index';
 import { setUser } from '../store/slices/userSlice';
 import Loader from './Loader';
+import Register from '../pages/Register';
 
 export const socket = io('http://localhost:4000');
 
@@ -44,7 +45,7 @@ function AppRouter() {
       </Route>
       <Route element={<AuthOutlet isAuth={isAuth} />}>
         <Route path="/sign-in" element={<Auth />} />
-        <Route path="/sign-up" />
+        <Route path="/sign-up" element={<Register />} />
       </Route>
       <Route path="*" element={<Navigate to="/messages" />} />
     </Routes>

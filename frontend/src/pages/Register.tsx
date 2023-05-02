@@ -1,14 +1,14 @@
-import { getUserMe, signIn } from '../utils/Api';
+import { getUserMe, signUp, signIn } from '../utils/Api';
 import { LOCAL_STORAGE_JWT_KEY } from '../utils/constants';
 import { Box, FormLabel, Typography, FormControl, Input, Button } from '@mui/joy';
 import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useAppDispatch } from '../hooks/index';
-import { setUser } from '../store/slices/userSlice';
 import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../hooks';
+import { setUser } from '../store/slices/userSlice';
 
-const Auth = () => {
+const Register = () => {
   const [isErrorVisible, setIsErrorVisible] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -20,18 +20,28 @@ const Auth = () => {
     const data = {
       email: formElements.email.value,
       password: formElements.password.value,
+      name: formElements.name.value,
+      login: formElements.login.value,
     };
 
-    signIn(data).then((res) => {
+    signUp(data).then((res) => {
       if (res === undefined) {
         setIsErrorVisible(true);
       } else {
         setIsErrorVisible(false);
-        getUserMe().then((res) => {
-          dispatch(setUser(res));
+        navigate('/sign-in');
+        signIn({ email: data.email, password: data.password }).then((res) => {
+          if (res === undefined) {
+            setIsErrorVisible(true);
+          } else {
+            setIsErrorVisible(false);
+            getUserMe().then((res) => {
+              dispatch(setUser(res));
+            });
+            navigate('/messages');
+            localStorage.setItem(LOCAL_STORAGE_JWT_KEY, res.token);
+          }
         });
-        navigate('/messages');
-        localStorage.setItem(LOCAL_STORAGE_JWT_KEY, res.token);
       }
     });
   };
@@ -77,13 +87,21 @@ const Auth = () => {
         }}>
         <div>
           <Typography component="h2" fontSize="xl2" fontWeight="lg">
-            Авторизация
+            Регистрация
           </Typography>
         </div>
         <form onSubmit={handleSubmit}>
           <FormControl required>
+            <FormLabel>Имя</FormLabel>
+            <Input placeholder="Введите имя" type="name" name="name" />
+          </FormControl>
+          <FormControl required>
             <FormLabel>E-mail</FormLabel>
             <Input placeholder="Введите почту" type="email" name="email" />
+          </FormControl>
+          <FormControl required>
+            <FormLabel>Логин</FormLabel>
+            <Input placeholder="Введите ваш логин" type="login" name="login" />
           </FormControl>
           <FormControl required>
             <FormLabel>Пароль</FormLabel>
@@ -100,11 +118,11 @@ const Auth = () => {
               fontFamily="sans-serif, Noto Color Emoji"
               lineHeight="0.5"
               sx={{ color: 'red', margin: 0, padding: 0 }}>
-              {isErrorVisible ? 'Неверная почта или пароль' : ''}
+              {isErrorVisible ? 'Неверно заполнены поля' : ''}
             </Typography>
           </Box>
           <Button type="submit" fullWidth>
-            Войти
+            Регистрация
           </Button>
         </form>
         <Link
@@ -113,8 +131,8 @@ const Auth = () => {
             textDecoration: 'none',
             color: 'var(--joy-palette-primary-50)',
           }}
-          to="/sign-up">
-          Ещё не зарегистрированы? Регистрация
+          to="/sign-in">
+          Уже зарегистрированы? Авторизация
         </Link>
       </Box>
       <Box component="footer" sx={{ py: 3 }}></Box>
@@ -122,4 +140,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default Register;

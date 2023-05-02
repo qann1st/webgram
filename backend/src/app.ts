@@ -22,7 +22,7 @@ async function start(): Promise<void> {
   await mongoose.connect(MONGODB_URL);
 
   const app = createExpressServer({
-    cors: { origin: '*' },
+    cors: { origin: 'https://webgram-three.vercel.app' },
     middlewares: [AuthErrorHandler, DefaultErrorHandler, HttpErrorHandler],
     controllers: [AuthController, UsersController, MessagesController],
     authorizationChecker,
@@ -32,7 +32,7 @@ async function start(): Promise<void> {
   });
 
   const server = app.listen(PORT, () => console.log(`Running on port ${PORT}`));
-  const io = new Server(server, { cors: { origin: '*' } });
+  const io = new Server(server, { cors: { origin: 'https://webgram-three.vercel.app' } });
 
   io.on('connection', (socket) => {
     socket.on('join', ({ roomId }: { roomId: string }) => {

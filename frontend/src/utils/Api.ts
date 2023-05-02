@@ -43,3 +43,10 @@ export const signIn = (body: object) => {
     .then((res) => res.data)
     .catch((err) => err.data);
 };
+
+export const signUp = (body: object) => {
+  return instance
+    .post(`signup`, body)
+    .then((res) => res.data)
+    .catch((err) => err.data);
+};
