@@ -1,8 +1,8 @@
 export interface IUser {
-  _id?: string;
-  name?: string;
+  _id: string;
+  name: string;
   login?: string;
-  avatar?: string;
+  avatar: string;
 }
 
 export interface IMessage {

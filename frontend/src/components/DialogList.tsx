@@ -1,27 +1,43 @@
 import { FC } from 'react';
 import { Box } from '@mui/joy';
 import Dialog from './Dialog';
-import { IUser } from '../utils/types';
+import { IMessage, IUser } from '../utils/types';
 import { useAppSelector } from '../hooks';
 
 interface ISearchProps {
-  users: Array<IUser>;
+  messages: IMessage[];
 }
 
-const DialogList: FC<ISearchProps> = ({ users }) => {
-  const { data } = useAppSelector((state) => state.user);
+const DialogList: FC<ISearchProps> = ({ messages }) => {
+  const { user } = useAppSelector((state) => state.user);
+  const { users } = useAppSelector((state) => state.users);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        overflowY: 'scroll',
+        height: '100vh',
+        '&::-webkit-scrollbar': {
+          backgroundColor: (theme) => theme.palette.primary[400],
+          borderRadius: '10px',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: (theme) => theme.palette.primary[500],
+          borderRadius: '10px',
+        },
+      }}>
       {users
-        ?.filter((user) => user._id !== data?._id)
+        ?.filter((us) => us._id !== user?._id)
         .map((user: IUser) => (
           <Dialog
             key={user._id}
             _id={user._id}
             name={user.name}
-            login={user.login}
             avatar={user.avatar}
+            messages={messages[messages.length - 1]}
           />
         ))}
     </Box>

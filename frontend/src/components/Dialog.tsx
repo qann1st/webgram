@@ -1,16 +1,23 @@
 import { FC } from 'react';
-import { IUser } from '../utils/types';
+import { IMessage } from '../utils/types';
 import { Box, Typography } from '@mui/joy';
 import { Link } from 'react-router-dom';
 import { useColorScheme } from '@mui/joy/styles';
 import { useAppSelector } from '../hooks';
 
-const Dialog: FC<IUser> = ({ name, _id, login, avatar }) => {
+interface IDialogProps {
+  name: string;
+  _id: string;
+  avatar: string;
+  messages: IMessage;
+}
+
+const Dialog: FC<IDialogProps> = ({ name, _id, avatar, messages }) => {
   const { mode } = useColorScheme();
-  const { data } = useAppSelector((state) => state.user);
+  const { user } = useAppSelector((state) => state.user);
 
   return (
-    <Link style={{ textDecoration: 'none' }} to={`/messages/${_id}${data?._id}`}>
+    <Link style={{ textDecoration: 'none' }} to={`/messages/${_id}${user?._id}`}>
       <Box
         sx={{
           display: 'flex',
@@ -23,7 +30,21 @@ const Dialog: FC<IUser> = ({ name, _id, login, avatar }) => {
           },
         }}>
         <img src={avatar} alt={name} style={{ width: '48px', borderRadius: '50%' }} />
-        <Typography>{name}</Typography>
+        <Box>
+          <Typography>{name}</Typography>
+          <Typography
+            sx={{
+              fontFamily: 'sans-serif, Noto Color Emoji',
+              fontSize: 16,
+              lineHeight: 1,
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              maxWidth: '320px',
+            }}>
+            {messages?.text}
+          </Typography>
+        </Box>
       </Box>
     </Link>
   );

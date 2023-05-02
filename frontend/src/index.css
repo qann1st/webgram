@@ -8,3 +8,15 @@ body {
 *::placeholder {
   color: gray;
 }
+
+::-webkit-scrollbar {
+  background-color: var(--joy-palette-primary-400);
+  width: 5px;
+  border-radius: 10px;
+  padding-left: 1000px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--joy-palette-primary-100);
+  border-radius: 10px;
+}

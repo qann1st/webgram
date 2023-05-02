@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { IUser } from '../../utils/types';
 
-export interface UserState {
-  data: Array<object> | null;
+export interface UsersState {
+  users: Array<IUser> | null;
 }
 
-const initialState: UserState = {
-  data: null,
+const initialState: UsersState = {
+  users: null,
 };
 
 const usersSlice = createSlice({
@@ -13,7 +14,7 @@ const usersSlice = createSlice({
   initialState,
   reducers: {
     setUsersList(state, action) {
-      state.data = action.payload;
+      state.users = action.payload;
     },
   },
 });
