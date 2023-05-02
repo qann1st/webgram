@@ -22,7 +22,6 @@
   "author": "qann1st",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^18.16.3",
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
@@ -47,6 +46,7 @@
     "@types/mongoose": "^5.11.97",
     "@types/reflect-metadata": "^0.1.0",
     "@types/socket.io": "^3.0.2",
+    "@types/node": "^18.16.3",
     "@typescript-eslint/eslint-plugin": "^5.57.0"
   }
 }
