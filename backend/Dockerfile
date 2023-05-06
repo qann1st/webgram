@@ -1,11 +1,7 @@
 FROM node:16
-
 WORKDIR /app
-
 COPY package*.json ./
-
-RUN npm install --only=production
-
+RUN npm install
 COPY . .
-
-CMD [ "npm", "run", "start" ]
+RUN npm run build
+CMD ["npm", "run", "start"]
