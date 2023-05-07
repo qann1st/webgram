@@ -56,7 +56,13 @@ const Chat: FC<IChatProps> = ({ messages, setMessages, setIsDialogsOpened }) => 
         id="toggle-mode"
         size="sm"
         variant="plain"
-        sx={{ position: 'absolute', zIndex: 10, left: '10px', top: '10px' }}
+        sx={{
+          position: 'absolute',
+          zIndex: 10,
+          left: '10px',
+          top: '10px',
+          backgroundColor: (theme) => theme.palette.primary[400],
+        }}
         color="neutral">
         <ArrowBack></ArrowBack>
       </IconButton>
@@ -75,7 +81,7 @@ const Chat: FC<IChatProps> = ({ messages, setMessages, setIsDialogsOpened }) => 
           sx={{
             overflowY: 'auto',
             height: '100vh',
-            paddingBottom: '70px',
+            paddingBottom: '120px',
           }}>
           {messages.map((message: IMessage, i) => (
             <Message
