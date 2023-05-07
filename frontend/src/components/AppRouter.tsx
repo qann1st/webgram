@@ -13,7 +13,7 @@ import { setUser } from '../store/slices/userSlice';
 import Loader from './Loader';
 import Register from '../pages/Register';
 
-export const socket = io('http://localhost:4000');
+export const socket = io('https://webgram.api.qann1st.site');
 
 function AppRouter() {
   const isAuth = useAppSelector((state) => state.user.isAuth);
