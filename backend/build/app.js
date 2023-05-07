@@ -22,7 +22,7 @@ function start() {
         mongoose_1.default.set('strictQuery', false);
         yield mongoose_1.default.connect(constants_1.MONGODB_URL);
         const app = (0, routing_controllers_1.createExpressServer)({
-            cors: { origin: 'https://webgram-three.vercel.app' },
+            cors: false,
             middlewares: [AuthErrorHandler_1.AuthErrorHandler, DefaultErrorHandler_1.DefaultErrorHandler, HttpErrorHandler_1.HttpErrorHandler],
             controllers: [AuthController_1.AuthController, UsersController_1.UsersController, MessagesController_1.MessagesController],
             authorizationChecker: authorization_1.default,
@@ -31,7 +31,7 @@ function start() {
             validation: true,
         });
         const server = app.listen(constants_1.PORT, () => console.log(`Running on port ${constants_1.PORT}`));
-        const io = new socket_io_1.Server(server, { cors: { origin: 'https://webgram-three.vercel.app' } });
+        const io = new socket_io_1.Server(server, { cors: { origin: '*' } });
         io.on('connection', (socket) => {
             socket.on('join', ({ roomId }) => {
                 socket.join(roomId);

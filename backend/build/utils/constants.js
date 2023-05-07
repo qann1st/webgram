@@ -1,10 +1,9 @@
 "use strict";
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.INTERNAL_ERROR = exports.BAD_TOKEN_TYPE = exports.BAD_TOKEN = exports.AUTH_REQUIRED = exports.AUTH_ERROR = exports.USER_EXISTS = exports.PAGE_NOT_FOUND = exports.USER_NOT_FOUND = exports.INTERNAL_SERVER_ERR_CODE = exports.BAD_REQUEST_ERR_CODE = exports.UNAUTHORIZED_ERR_CODE = exports.FORBIDDEN_ERR_CODE = exports.NOT_FOUND_ERR_CODE = exports.CONFLICT_ERR_CODE = exports.JWT_SECRET = exports.MONGODB_URL = exports.PORT = void 0;
 exports.PORT = process.env.PORT || 4000;
 exports.MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost:27017/webgram';
-exports.JWT_SECRET = (_a = process.env.JWT_SECRET) !== null && _a !== void 0 ? _a : 'jwtsecretkey';
+exports.JWT_SECRET = process.env.JWT_SECRET || 'jwtsecretkey';
 exports.CONFLICT_ERR_CODE = 409;
 exports.NOT_FOUND_ERR_CODE = 404;
 exports.FORBIDDEN_ERR_CODE = 403;
