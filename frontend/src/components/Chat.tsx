@@ -1,21 +1,27 @@
 import { Dispatch, FC, memo, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { IMessage } from '../utils/types';
-import { Box, Typography } from '@mui/joy';
+import { Box, IconButton, Typography } from '@mui/joy';
 import { socket } from './AppRouter';
 import NewMessage from './NewMessage';
 import Message from './Message';
 import { getRoomMessages } from '../utils/Api';
 import Loader from './Loader';
+import { ArrowBack } from '@mui/icons-material';
 
 interface IChatProps {
   messages: IMessage[];
   setMessages: Dispatch<React.SetStateAction<IMessage[]>>;
+  setIsDialogsOpened: Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Chat: FC<IChatProps> = ({ messages, setMessages }) => {
+const Chat: FC<IChatProps> = ({ messages, setMessages, setIsDialogsOpened }) => {
   const params = useParams();
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setIsLoading(true);
+  }, []);
 
   useEffect(() => {
     getRoomMessages(params.id)
@@ -45,6 +51,15 @@ const Chat: FC<IChatProps> = ({ messages, setMessages }) => {
 
   return (
     <>
+      <IconButton
+        onClick={() => setIsDialogsOpened(true)}
+        id="toggle-mode"
+        size="sm"
+        variant="plain"
+        sx={{ position: 'absolute', zIndex: 10, left: '10px', top: '10px' }}
+        color="neutral">
+        <ArrowBack></ArrowBack>
+      </IconButton>
       {messages.length === 0 ? (
         <Box
           sx={{
@@ -58,7 +73,7 @@ const Chat: FC<IChatProps> = ({ messages, setMessages }) => {
       ) : (
         <Box
           sx={{
-            overflowY: 'scroll',
+            overflowY: 'auto',
             height: '100vh',
             paddingBottom: '70px',
           }}>

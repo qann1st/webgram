@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { Dispatch, FC, SetStateAction } from 'react';
 import { Box } from '@mui/joy';
 import Dialog from './Dialog';
 import { IMessage, IUser } from '../utils/types';
@@ -6,9 +6,10 @@ import { useAppSelector } from '../hooks';
 
 interface IDialogListProps {
   messages: IMessage[];
+  setIsDialogsOpened: Dispatch<SetStateAction<boolean>>;
 }
 
-const DialogList: FC<IDialogListProps> = ({ messages }) => {
+const DialogList: FC<IDialogListProps> = ({ messages, setIsDialogsOpened }) => {
   const { user } = useAppSelector((state) => state.user);
   const { users } = useAppSelector((state) => state.users);
 
@@ -18,7 +19,8 @@ const DialogList: FC<IDialogListProps> = ({ messages }) => {
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        overflowY: 'scroll',
+        overflowY: 'auto',
+        overflowX: 'hidden',
         height: '100vh',
         '&::-webkit-scrollbar': {
           backgroundColor: (theme) => theme.palette.primary[400],
@@ -38,6 +40,7 @@ const DialogList: FC<IDialogListProps> = ({ messages }) => {
             _id={user._id}
             name={user.name}
             avatar={user.avatar}
+            setIsDialogsOpened={setIsDialogsOpened}
           />
         ))}
     </Box>

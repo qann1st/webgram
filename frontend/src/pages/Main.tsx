@@ -15,6 +15,7 @@ const Main: FC = () => {
   const [isResize, setIsResize] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const [isDialogsOpened, setIsDialogsOpened] = useState(true);
 
   useEffect(() => {
     getUsers().then((users) => {
@@ -51,14 +52,31 @@ const Main: FC = () => {
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex' }}>
       <ColorSchemeToggle />
-      <Box style={{ maxWidth: '500px', minWidth: '200px', flex: 1 }} ref={sidebarRef}>
-        <DialogList messages={messages} />
+      <Box
+        sx={{
+          display: {
+            xs: isDialogsOpened ? 'block' : 'none',
+            md: 'block',
+          },
+          maxWidth: {
+            xs: '100%',
+            md: '500px',
+          },
+          minWidth: '320px',
+          flex: 1,
+        }}
+        ref={sidebarRef}>
+        <DialogList setIsDialogsOpened={setIsDialogsOpened} messages={messages} />
       </Box>
       <Divider
         onMouseDown={() => setIsResize(true)}
         orientation="vertical"
         sx={{
           width: '7px',
+          display: {
+            xs: 'none',
+            md: 'flex',
+          },
           '&:hover': {
             backgroundColor: (theme) => theme.palette.primary.softHoverBg,
             cursor: 'pointer',
@@ -74,9 +92,17 @@ const Main: FC = () => {
           backgroundColor: (theme) => theme.palette.primary[400],
           flex: 1,
           minHeight: '100vh',
+          display: {
+            xs: !isDialogsOpened ? 'block' : 'none',
+            md: 'block',
+          },
         }}>
         {params.id ? (
-          <Chat messages={messages} setMessages={setMessages} />
+          <Chat
+            setIsDialogsOpened={setIsDialogsOpened}
+            messages={messages}
+            setMessages={setMessages}
+          />
         ) : (
           <Box
             sx={{

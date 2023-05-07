@@ -21,7 +21,7 @@ const ColorSchemeToggle: FC<IconButtonProps> = ({ onClick, sx, ...props }) => {
       id="toggle-mode"
       size="sm"
       variant="plain"
-      sx={{ position: 'absolute', right: '10px', top: '10px' }}
+      sx={{ position: 'absolute', zIndex: 10, right: '10px', top: '10px' }}
       color="neutral"
       {...props}
       onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

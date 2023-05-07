@@ -12,6 +12,7 @@ export class MessagesController {
   @Get('/last/:roomId')
   private async getLastMessage(@Params() { roomId }: { roomId: string }) {
     const messages = await MessageModel.find({ roomId });
-    return messages[messages.length - 1];
+
+    return messages !== undefined ? messages[messages.length - 1] : '';
   }
 }
