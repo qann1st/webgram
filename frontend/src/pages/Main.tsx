@@ -52,7 +52,7 @@ const Main: FC = () => {
     <Box sx={{ minHeight: '100vh', display: 'flex' }}>
       <ColorSchemeToggle />
       <Box style={{ maxWidth: '500px', minWidth: '200px', flex: 1 }} ref={sidebarRef}>
-        <DialogList />
+        <DialogList messages={messages} />
       </Box>
       <Divider
         onMouseDown={() => setIsResize(true)}

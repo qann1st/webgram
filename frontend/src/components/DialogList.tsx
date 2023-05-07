@@ -1,10 +1,14 @@
 import { FC } from 'react';
 import { Box } from '@mui/joy';
 import Dialog from './Dialog';
-import { IUser } from '../utils/types';
+import { IMessage, IUser } from '../utils/types';
 import { useAppSelector } from '../hooks';
 
-const DialogList: FC = () => {
+interface IDialogListProps {
+  messages: IMessage[];
+}
+
+const DialogList: FC<IDialogListProps> = ({ messages }) => {
   const { user } = useAppSelector((state) => state.user);
   const { users } = useAppSelector((state) => state.users);
 
@@ -28,7 +32,13 @@ const DialogList: FC = () => {
       {users
         ?.filter((us) => us._id !== user?._id)
         .map((user: IUser) => (
-          <Dialog key={user._id} _id={user._id} name={user.name} avatar={user.avatar} />
+          <Dialog
+            key={user._id}
+            messages={messages}
+            _id={user._id}
+            name={user.name}
+            avatar={user.avatar}
+          />
         ))}
     </Box>
   );

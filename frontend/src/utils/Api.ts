@@ -2,7 +2,7 @@ import axios from 'axios';
 import { LOCAL_STORAGE_JWT_KEY } from './constants';
 
 const instance = axios.create({
-  baseURL: 'https://webgram.api.qann1st.site/',
+  baseURL: 'http://localhost:4000/',
   headers: {
     'Access-Control': 'application/json',
     Authorization: 'Bearer ' + localStorage.getItem(LOCAL_STORAGE_JWT_KEY),

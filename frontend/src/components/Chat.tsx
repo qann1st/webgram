@@ -37,8 +37,7 @@ const Chat: FC<IChatProps> = ({ messages, setMessages }) => {
     return () => {
       socket.emit('leave', { roomId: params.id });
     };
-    // eslint-disable-next-line
-  }, []);
+  }, [params.id]);
 
   if (isLoading) {
     return <Loader />;

@@ -22,7 +22,7 @@ async function start(): Promise<void> {
   await mongoose.connect(MONGODB_URL);
 
   const app = createExpressServer({
-    cors: false,
+    cors: true,
     middlewares: [AuthErrorHandler, DefaultErrorHandler, HttpErrorHandler],
     controllers: [AuthController, UsersController, MessagesController],
     authorizationChecker,

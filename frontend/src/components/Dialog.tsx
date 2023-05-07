@@ -4,23 +4,25 @@ import { Link } from 'react-router-dom';
 import { useColorScheme } from '@mui/joy/styles';
 import { useAppSelector } from '../hooks';
 import { getLastMessage } from '../utils/Api';
+import { IMessage } from '../utils/types';
 
 interface IDialogProps {
   name: string;
   _id: string;
   avatar: string;
+  messages: IMessage[];
 }
 
-const Dialog: FC<IDialogProps> = ({ name, _id, avatar }) => {
+const Dialog: FC<IDialogProps> = ({ name, messages, _id, avatar }) => {
   const { mode } = useColorScheme();
   const { user } = useAppSelector((state) => state.user);
   const [lastMessage, setLastMessage] = useState('');
 
   useEffect(() => {
     getLastMessage(`${_id}${user?._id}`).then((res) => {
-      setLastMessage(res.text);
+      setLastMessage(res?.text);
     });
-  }, []);
+  }, [messages]);
 
   return (
     <Link
