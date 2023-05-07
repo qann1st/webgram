@@ -19,8 +19,8 @@ const Dialog: FC<IDialogProps> = ({ name, messages, _id, avatar }) => {
   const [lastMessage, setLastMessage] = useState('');
   const id =
     user?._id !== undefined && user?._id > _id
-      ? `/messages/${_id}${user?._id}`
-      : `/messages/${user?._id}${_id}`;
+      ? `messages/${_id}${user?._id}`
+      : `messages/${user?._id}${_id}`;
 
   useEffect(() => {
     getLastMessage(id).then((res) => {
@@ -29,7 +29,7 @@ const Dialog: FC<IDialogProps> = ({ name, messages, _id, avatar }) => {
   }, [messages]);
 
   return (
-    <Link style={{ textDecoration: 'none' }} to={id}>
+    <Link style={{ textDecoration: 'none' }} to={`/${id}`}>
       <Box
         sx={{
           display: 'flex',
