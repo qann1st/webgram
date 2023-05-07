@@ -8,6 +8,7 @@ import Message from './Message';
 import { getRoomMessages } from '../utils/Api';
 import Loader from './Loader';
 import { ArrowBack } from '@mui/icons-material';
+import { useColorScheme } from '@mui/joy/styles';
 
 interface IChatProps {
   messages: IMessage[];
@@ -17,6 +18,7 @@ interface IChatProps {
 
 const Chat: FC<IChatProps> = ({ messages, setMessages, setIsDialogsOpened }) => {
   const params = useParams();
+  const { mode } = useColorScheme();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -61,10 +63,10 @@ const Chat: FC<IChatProps> = ({ messages, setMessages, setIsDialogsOpened }) => 
           zIndex: 10,
           left: '10px',
           top: '10px',
-          backgroundColor: (theme) => theme.palette.primary[400],
+          backgroundColor: (theme) => theme.palette.primary[100],
         }}
         color="neutral">
-        <ArrowBack></ArrowBack>
+        <ArrowBack sx={{ color: 'black' }}></ArrowBack>
       </IconButton>
       {messages.length === 0 ? (
         <Box

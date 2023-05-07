@@ -26,7 +26,7 @@ const ColorSchemeToggle: FC<IconButtonProps> = ({ onClick, sx, ...props }) => {
         zIndex: 10,
         right: '10px',
         top: '10px',
-        backgroundColor: (theme) => theme.palette.primary[400],
+        backgroundColor: (theme) => theme.palette.primary[100],
       }}
       color="neutral"
       {...props}
@@ -38,7 +38,11 @@ const ColorSchemeToggle: FC<IconButtonProps> = ({ onClick, sx, ...props }) => {
         }
         onClick?.(e);
       }}>
-      {mode === 'light' ? <DarkMode /> : <LightMode />}
+      {mode === 'light' ? (
+        <DarkMode sx={{ color: 'black' }} />
+      ) : (
+        <LightMode sx={{ color: 'black' }} />
+      )}
     </IconButton>
   );
 };
