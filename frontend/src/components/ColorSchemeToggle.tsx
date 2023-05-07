@@ -1,10 +1,10 @@
 import { useColorScheme } from '@mui/joy/styles';
 import IconButton, { IconButtonProps } from '@mui/joy/IconButton';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { LightMode } from '@mui/icons-material';
 import { DarkMode } from '@mui/icons-material';
 
-export default function ColorSchemeToggle({ onClick, sx, ...props }: IconButtonProps) {
+const ColorSchemeToggle: FC<IconButtonProps> = ({ onClick, sx, ...props }) => {
   const { mode, setMode } = useColorScheme();
   const [mounted, setMounted] = useState(false);
 
@@ -35,4 +35,6 @@ export default function ColorSchemeToggle({ onClick, sx, ...props }: IconButtonP
       {mode === 'light' ? <DarkMode /> : <LightMode />}
     </IconButton>
   );
-}
+};
+
+export default ColorSchemeToggle;

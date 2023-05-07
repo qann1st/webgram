@@ -7,7 +7,7 @@ import { useAppSelector } from '../hooks';
 import PrivateOutlet from './PrivateOutlet';
 import AuthOutlet from './AuthOutlet';
 import Auth from '../pages/Auth';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useAppDispatch } from '../hooks/index';
 import { setUser } from '../store/slices/userSlice';
 import Loader from './Loader';
@@ -15,7 +15,7 @@ import Register from '../pages/Register';
 
 export const socket = io('https://webgram.api.qann1st.site');
 
-function AppRouter() {
+const AppRouter: FC = () => {
   const isAuth = useAppSelector((state) => state.user.isAuth);
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
@@ -50,6 +50,6 @@ function AppRouter() {
       <Route path="*" element={<Navigate to="/messages" />} />
     </Routes>
   );
-}
+};
 
 export default AppRouter;

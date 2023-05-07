@@ -2,16 +2,18 @@ import { getUserMe, signUp, signIn } from '../utils/Api';
 import { LOCAL_STORAGE_JWT_KEY } from '../utils/constants';
 import { Box, FormLabel, Typography, FormControl, Input, Button } from '@mui/joy';
 import ColorSchemeToggle from '../components/ColorSchemeToggle';
-import { FormEvent, useState } from 'react';
+import { FC, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../hooks';
 import { setUser } from '../store/slices/userSlice';
+import { useColorScheme } from '@mui/joy/styles';
 
-const Register = () => {
+const Register: FC = () => {
   const [isErrorVisible, setIsErrorVisible] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { mode } = useColorScheme();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -129,7 +131,7 @@ const Register = () => {
           style={{
             textAlign: 'center',
             textDecoration: 'none',
-            color: 'var(--joy-palette-primary-50)',
+            color: mode === 'dark' ? 'white' : 'black',
           }}
           to="/sign-in">
           Уже зарегистрированы? Авторизация

@@ -1,6 +1,7 @@
 import { Box, CircularProgress } from '@mui/joy';
+import { FC } from 'react';
 
-const Loader = () => {
+const Loader: FC = () => {
   return (
     <Box
       sx={{

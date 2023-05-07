@@ -1,5 +1,6 @@
 import { CssBaseline } from '@mui/joy/index';
 import { extendTheme, CssVarsProvider } from '@mui/joy/styles';
+import { FC } from 'react';
 import AppRouter from './AppRouter';
 
 const theme = extendTheme({
@@ -21,7 +22,7 @@ const theme = extendTheme({
   },
 });
 
-const App = () => {
+const App: FC = () => {
   return (
     <CssVarsProvider theme={theme}>
       <CssBaseline />

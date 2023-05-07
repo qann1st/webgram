@@ -3,9 +3,9 @@ import { Send } from '@mui/icons-material';
 import { socket } from './AppRouter';
 import { useAppSelector } from '../hooks';
 import { useParams } from 'react-router';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
-const NewMessage = () => {
+const NewMessage: FC = () => {
   const { user } = useAppSelector((state) => state.user);
   const { id } = useParams();
   const [value, setValue] = useState('');
