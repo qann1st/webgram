@@ -17,21 +17,19 @@ const Dialog: FC<IDialogProps> = ({ name, messages, _id, avatar }) => {
   const { mode } = useColorScheme();
   const { user } = useAppSelector((state) => state.user);
   const [lastMessage, setLastMessage] = useState('');
+  const id =
+    user?._id !== undefined && user?._id > _id
+      ? `/messages/${_id}${user?._id}`
+      : `/messages/${user?._id}${_id}`;
 
   useEffect(() => {
-    getLastMessage(`${_id}${user?._id}`).then((res) => {
+    getLastMessage(id).then((res) => {
       setLastMessage(res?.text);
     });
   }, [messages]);
 
   return (
-    <Link
-      style={{ textDecoration: 'none' }}
-      to={
-        user?._id !== undefined && user?._id > _id
-          ? `/messages/${_id}${user?._id}`
-          : `/messages/${user?._id}${_id}`
-      }>
+    <Link style={{ textDecoration: 'none' }} to={id}>
       <Box
         sx={{
           display: 'flex',
