@@ -1,17 +1,16 @@
-import { io } from 'socket.io-client';
-import Main from '../pages/Main';
-import { Navigate, Routes } from 'react-router';
-import { Route } from 'react-router';
-import { getUserMe } from '../utils/Api';
-import { useAppSelector } from '../hooks';
-import PrivateOutlet from './PrivateOutlet';
-import AuthOutlet from './AuthOutlet';
-import Auth from '../pages/Auth';
 import { FC, useEffect, useState } from 'react';
+import { Navigate, Route, Routes } from 'react-router';
+import { io } from 'socket.io-client';
+import { useAppSelector } from '../hooks';
 import { useAppDispatch } from '../hooks/index';
-import { setUser } from '../store/slices/userSlice';
-import Loader from './Loader';
+import Auth from '../pages/Auth';
+import Main from '../pages/Main';
 import Register from '../pages/Register';
+import { setUser } from '../store/slices/userSlice';
+import { getUserMe } from '../utils/Api';
+import AuthOutlet from './AuthOutlet';
+import Loader from './Loader';
+import PrivateOutlet from './PrivateOutlet';
 
 export const socket = io('https://webgram.api.qann1st.site');
 

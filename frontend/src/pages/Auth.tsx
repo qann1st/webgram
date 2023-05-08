@@ -1,13 +1,13 @@
-import { getUserMe, signIn } from '../utils/Api';
-import { LOCAL_STORAGE_JWT_KEY } from '../utils/constants';
-import { Box, FormLabel, Typography, FormControl, Input, Button } from '@mui/joy';
-import ColorSchemeToggle from '../components/ColorSchemeToggle';
+import { Box, Button, FormControl, FormLabel, Input, Typography } from '@mui/joy';
+import { useColorScheme } from '@mui/joy/styles';
 import { FC, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
+import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import { useAppDispatch } from '../hooks/index';
 import { setUser } from '../store/slices/userSlice';
-import { Link } from 'react-router-dom';
-import { useColorScheme } from '@mui/joy/styles';
+import { getUserMe, signIn } from '../utils/Api';
+import { LOCAL_STORAGE_JWT_KEY } from '../utils/constants';
 
 const Auth: FC = () => {
   const [isErrorVisible, setIsErrorVisible] = useState(false);

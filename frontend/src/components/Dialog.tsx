@@ -1,8 +1,9 @@
-import { Dispatch, FC, useEffect, useState, SetStateAction } from 'react';
 import { Box, Typography } from '@mui/joy';
-import { Link } from 'react-router-dom';
 import { useColorScheme } from '@mui/joy/styles';
-import { useAppSelector } from '../hooks';
+import { FC, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { setIsDialogsOpened } from '../store/slices/dialogsSlice';
 import { getLastMessage } from '../utils/Api';
 import { IMessage } from '../utils/types';
 
@@ -10,14 +11,14 @@ interface IDialogProps {
   name: string;
   _id: string;
   avatar: string;
-  messages: IMessage[];
-  setIsDialogsOpened: Dispatch<SetStateAction<boolean>>;
+  messages: IMessage[] | null;
 }
 
-const Dialog: FC<IDialogProps> = ({ name, messages, _id, avatar, setIsDialogsOpened }) => {
+const Dialog: FC<IDialogProps> = ({ name, messages, _id, avatar }) => {
   const { mode } = useColorScheme();
-  const { user } = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user.user);
   const [lastMessage, setLastMessage] = useState('');
+  const dispatch = useAppDispatch();
   const id =
     user?._id !== undefined && user._id > _id ? `${_id}${user?._id}` : `${user?._id}${_id}`;
 
@@ -28,7 +29,7 @@ const Dialog: FC<IDialogProps> = ({ name, messages, _id, avatar, setIsDialogsOpe
   }, [messages]);
 
   return (
-    <div onClick={() => setIsDialogsOpened((prev) => !prev)}>
+    <div onClick={() => dispatch(setIsDialogsOpened(false))}>
       <Link style={{ textDecoration: 'none' }} to={`/messages/${id}`}>
         <Box
           sx={{

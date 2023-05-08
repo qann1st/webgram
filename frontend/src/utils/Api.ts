@@ -23,7 +23,7 @@ export const getUserMe = () => {
     .catch((err) => err.data);
 };
 
-export const getRoomMessages = (id: string | undefined) => {
+export const getRoomMessages = (id: string) => {
   return instance
     .get(`messages/${id}`)
     .then((res) => res.data)

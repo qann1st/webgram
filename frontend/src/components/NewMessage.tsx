@@ -1,12 +1,12 @@
-import { Box, IconButton, Input } from '@mui/joy';
 import { Send } from '@mui/icons-material';
-import { socket } from './AppRouter';
-import { useAppSelector } from '../hooks';
-import { useParams } from 'react-router';
+import { Box, IconButton, Input } from '@mui/joy';
 import { FC, useState } from 'react';
+import { useParams } from 'react-router';
+import { useAppSelector } from '../hooks';
+import { socket } from './AppRouter';
 
 const NewMessage: FC = () => {
-  const { user } = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user.user);
   const { id } = useParams();
   const [value, setValue] = useState('');
 
@@ -23,7 +23,7 @@ const NewMessage: FC = () => {
   };
 
   return (
-    <Box sx={{ position: 'sticky', bottom: 0, margin: '0 5px' }}>
+    <Box sx={{ margin: '0 5px' }}>
       <Box
         sx={{
           backgroundColor: (theme) => theme.palette.primary[400],

@@ -1,27 +1,24 @@
-import { FC, useEffect, useState, useRef } from 'react';
 import { Box, Divider, Typography } from '@mui/joy';
-import ColorSchemeToggle from '../components/ColorSchemeToggle';
-import DialogList from '../components/DialogList';
-import { IMessage } from '../utils/types';
-import { useAppDispatch } from '../hooks/index';
-import { getUsers } from '../utils/Api';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import Chat from '../components/Chat';
+import ColorSchemeToggle from '../components/ColorSchemeToggle';
+import DialogList from '../components/DialogList';
+import { useAppDispatch, useAppSelector } from '../hooks/index';
 import { setUsersList } from '../store/slices/usersSlice';
+import { getUsers } from '../utils/Api';
 
 const Main: FC = () => {
   const dispatch = useAppDispatch();
   const params = useParams();
   const [isResize, setIsResize] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState<IMessage[]>([]);
-  const [isDialogsOpened, setIsDialogsOpened] = useState(true);
+  const isDialogsOpened = useAppSelector((state) => state.dialogs.isDialogsOpened);
 
   useEffect(() => {
     getUsers().then((users) => {
       dispatch(setUsersList(users));
     });
-
     // eslint-disable-next-line
   }, []);
 
@@ -63,10 +60,11 @@ const Main: FC = () => {
             md: '500px',
           },
           minWidth: '320px',
+          maxHeight: '100vh',
           flex: 1,
         }}
         ref={sidebarRef}>
-        <DialogList setIsDialogsOpened={setIsDialogsOpened} messages={messages} />
+        <DialogList />
       </Box>
       <Divider
         onMouseDown={() => setIsResize(true)}
@@ -79,10 +77,10 @@ const Main: FC = () => {
           },
           '&:hover': {
             backgroundColor: (theme) => theme.palette.primary.softHoverBg,
-            cursor: 'pointer',
+            cursor: 'resize',
           },
           '&:active': {
-            cursor: 'grab',
+            cursor: 'resize',
           },
         }}
       />
@@ -91,18 +89,15 @@ const Main: FC = () => {
           width: '100%',
           backgroundColor: (theme) => theme.palette.primary[400],
           flex: 1,
-          minHeight: '100vh',
+          height: '100vh',
+          flexDirection: 'column',
           display: {
-            xs: !isDialogsOpened ? 'block' : 'none',
-            md: 'block',
+            xs: !isDialogsOpened ? 'flex' : 'none',
+            md: 'flex',
           },
         }}>
         {params.id ? (
-          <Chat
-            setIsDialogsOpened={setIsDialogsOpened}
-            messages={messages}
-            setMessages={setMessages}
-          />
+          <Chat />
         ) : (
           <Box
             sx={{

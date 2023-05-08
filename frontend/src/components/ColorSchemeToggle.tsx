@@ -1,8 +1,7 @@
-import { useColorScheme } from '@mui/joy/styles';
+import { DarkMode, LightMode } from '@mui/icons-material';
 import IconButton, { IconButtonProps } from '@mui/joy/IconButton';
+import { useColorScheme } from '@mui/joy/styles';
 import { FC, useEffect, useState } from 'react';
-import { LightMode } from '@mui/icons-material';
-import { DarkMode } from '@mui/icons-material';
 
 const ColorSchemeToggle: FC<IconButtonProps> = ({ onClick, sx, ...props }) => {
   const { mode, setMode } = useColorScheme();

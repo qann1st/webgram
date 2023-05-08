@@ -1,8 +1,8 @@
-import { FC } from 'react';
 import { Avatar, Box, Card, Typography } from '@mui/joy';
-import { IUser } from '../utils/types';
-import { useAppSelector } from '../hooks';
 import { intlFormatDistance } from 'date-fns';
+import { FC } from 'react';
+import { useAppSelector } from '../hooks';
+import { IUser } from '../utils/types';
 
 interface IPropsMessage {
   owner: IUser;
@@ -12,7 +12,7 @@ interface IPropsMessage {
 
 const Message: FC<IPropsMessage> = ({ owner, text, timestamp }) => {
   const rtf = intlFormatDistance(new Date(timestamp), Date.now(), { locale: 'ru' });
-  const { user } = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user.user);
 
   return (
     <Box

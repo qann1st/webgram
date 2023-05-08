@@ -1,5 +1,5 @@
 import { CssBaseline } from '@mui/joy/index';
-import { extendTheme, CssVarsProvider } from '@mui/joy/styles';
+import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
 import { FC } from 'react';
 import AppRouter from './AppRouter';
 

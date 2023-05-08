@@ -1,44 +1,48 @@
-import { Dispatch, FC, memo, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { IMessage } from '../utils/types';
-import { Box, IconButton, Typography } from '@mui/joy';
-import { socket } from './AppRouter';
-import NewMessage from './NewMessage';
-import Message from './Message';
-import { getRoomMessages } from '../utils/Api';
-import Loader from './Loader';
 import { ArrowBack } from '@mui/icons-material';
-import { useColorScheme } from '@mui/joy/styles';
+import { Box, IconButton, Typography } from '@mui/joy';
+import { FC, useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router';
+import { useAppDispatch, useAppSelector } from '../hooks/index';
+import { setIsDialogsOpened } from '../store/slices/dialogsSlice';
+import { addMessage, setMessages } from '../store/slices/messagesSlice';
+import { getRoomMessages } from '../utils/Api';
+import { IMessage } from '../utils/types';
+import { socket } from './AppRouter';
+import Loader from './Loader';
+import Message from './Message';
+import NewMessage from './NewMessage';
 
-interface IChatProps {
-  messages: IMessage[];
-  setMessages: Dispatch<React.SetStateAction<IMessage[]>>;
-  setIsDialogsOpened: Dispatch<React.SetStateAction<boolean>>;
-}
-
-const Chat: FC<IChatProps> = ({ messages, setMessages, setIsDialogsOpened }) => {
+const Chat: FC = () => {
   const params = useParams();
-  const { mode } = useColorScheme();
   const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const messages = useAppSelector((state) => state.messages.messages);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isDialogsOpened = useAppSelector((state) => state.dialogs.isDialogsOpened);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({});
+    }
+  }, [messages, isLoading, isDialogsOpened]);
 
   useEffect(() => {
     setIsLoading(true);
-  }, []);
-
-  useEffect(() => {
-    getRoomMessages(params.id)
-      .then((data) => {
-        setMessages(data);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    if (params.id) {
+      getRoomMessages(params.id)
+        .then((data) => {
+          dispatch(setMessages(data));
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
 
     socket.emit('join', { roomId: params.id });
 
     socket.on('message', (message: IMessage) => {
       if (message.roomId === params.id) {
-        setMessages((prev) => [...prev, message]);
+        dispatch(addMessage(message));
       }
     });
 
@@ -54,7 +58,7 @@ const Chat: FC<IChatProps> = ({ messages, setMessages, setIsDialogsOpened }) => 
   return (
     <>
       <IconButton
-        onClick={() => setIsDialogsOpened(true)}
+        onClick={() => dispatch(setIsDialogsOpened(true))}
         id="toggle-mode"
         size="sm"
         variant="plain"
@@ -63,12 +67,16 @@ const Chat: FC<IChatProps> = ({ messages, setMessages, setIsDialogsOpened }) => 
           zIndex: 10,
           left: '10px',
           top: '10px',
+          display: {
+            xs: 'flex',
+            md: 'none',
+          },
           backgroundColor: (theme) => theme.palette.primary[100],
         }}
         color="neutral">
         <ArrowBack sx={{ color: 'black' }}></ArrowBack>
       </IconButton>
-      {messages.length === 0 ? (
+      {messages?.length === 0 ? (
         <Box
           sx={{
             display: 'flex',
@@ -81,11 +89,15 @@ const Chat: FC<IChatProps> = ({ messages, setMessages, setIsDialogsOpened }) => 
       ) : (
         <Box
           sx={{
-            overflowY: 'auto',
-            height: '100vh',
-            paddingBottom: '120px',
+            overflowY: 'scroll',
+            boxSizing: 'border-box',
+            flex: 1,
+            paddingBottom: {
+              xs: '20px',
+              md: '30px',
+            },
           }}>
-          {messages.map((message: IMessage, i) => (
+          {messages?.map((message: IMessage, i) => (
             <Message
               key={message._id}
               owner={message.owner}
@@ -93,6 +105,7 @@ const Chat: FC<IChatProps> = ({ messages, setMessages, setIsDialogsOpened }) => 
               timestamp={message.timestamp}
             />
           ))}
+          <div ref={scrollRef}></div>
         </Box>
       )}
       <NewMessage />
@@ -100,4 +113,4 @@ const Chat: FC<IChatProps> = ({ messages, setMessages, setIsDialogsOpened }) => 
   );
 };
 
-export default memo(Chat);
+export default Chat;
