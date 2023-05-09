@@ -5,6 +5,7 @@ import Chat from '../components/Chat';
 import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import DialogList from '../components/DialogList';
 import { useAppDispatch, useAppSelector } from '../hooks/index';
+import { setIsDialogsOpened } from '../store/slices/dialogsSlice';
 import { setUsersList } from '../store/slices/usersSlice';
 import { getUsers } from '../utils/Api';
 
@@ -21,6 +22,12 @@ const Main: FC = () => {
     });
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (!params.id) {
+      dispatch(setIsDialogsOpened(true));
+    }
+  }, [params.id]);
 
   useEffect(() => {
     const resize = () => {

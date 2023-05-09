@@ -1,7 +1,7 @@
 import { ArrowBack } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/joy';
-import { FC, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router';
+import { FC, memo, useEffect, useRef, useState } from 'react';
+import { useParams, useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../hooks/index';
 import { setIsDialogsOpened } from '../store/slices/dialogsSlice';
 import { addMessage, setMessages } from '../store/slices/messagesSlice';
@@ -19,6 +19,7 @@ const Chat: FC = () => {
   const messages = useAppSelector((state) => state.messages.messages);
   const scrollRef = useRef<HTMLDivElement>(null);
   const isDialogsOpened = useAppSelector((state) => state.dialogs.isDialogsOpened);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -58,7 +59,10 @@ const Chat: FC = () => {
   return (
     <>
       <IconButton
-        onClick={() => dispatch(setIsDialogsOpened(true))}
+        onClick={() => {
+          dispatch(setIsDialogsOpened(true));
+          navigate('/messages');
+        }}
         id="toggle-mode"
         size="sm"
         variant="plain"
