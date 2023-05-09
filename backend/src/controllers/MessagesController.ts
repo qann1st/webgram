@@ -1,4 +1,5 @@
-import { Get, JsonController, Params } from 'routing-controllers';
+import { Response } from 'express';
+import { Get, JsonController, Params, Res } from 'routing-controllers';
 import MessageModel from '../models/MessageModel';
 
 @JsonController('/messages', { transformResponse: false })
@@ -10,9 +11,13 @@ export class MessagesController {
   }
 
   @Get('/last/:roomId')
-  private async getLastMessage(@Params() { roomId }: { roomId: string }) {
+  private async getLastMessage(@Params() { roomId }: { roomId: string }, @Res() res: Response) {
     const messages = await MessageModel.find({ roomId });
 
-    return messages !== undefined ? messages[messages.length - 1] : '';
+    if (!messages) {
+      res.status(404);
+      return 'Пока сообщений нет';
+    }
+    return messages[messages.length - 1];
   }
 }
