@@ -45,7 +45,7 @@ export class UsersController {
       return updated;
     }
 
-    throw new BadRequestError('User not found');
+    throw new BadRequestError('Пользователь не найден');
   }
 
   @Authorized(['user'])

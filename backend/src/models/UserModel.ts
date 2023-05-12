@@ -7,6 +7,7 @@ export interface IUser {
   avatar: string;
   email: string;
   password: string;
+  isOnline: boolean;
 }
 
 export interface IUserModel extends Model<IUser> {
@@ -55,6 +56,9 @@ const userSchema = new mongoose.Schema<IUser, IUserModel>({
     type: String,
     select: false,
     required: true,
+  },
+  isOnline: {
+    type: Boolean,
   },
 });
 

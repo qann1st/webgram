@@ -14,6 +14,7 @@ import currentUserChecker from './checkers/currentUser';
 import { UsersController } from './controllers/UsersController';
 import MessageModel, { IMessage } from './models/MessageModel';
 import { MessagesController } from './controllers/MessagesController';
+import UserModel from './models/UserModel';
 
 dotenv.config();
 
@@ -44,6 +45,26 @@ async function start(): Promise<void> {
       const message: IMessage = await MessageModel.create({ owner, text, roomId, timestamp });
       socket.to(roomId).emit('message', message);
       socket.emit('message', message);
+    });
+
+    socket.on('con', async (user) => {
+      await UserModel.findOneAndUpdate(
+        { _id: user._id },
+        { isOnline: true },
+        { new: true, runValidators: true },
+      ).exec();
+      const users = await UserModel.find({});
+      socket.emit('con', users);
+    });
+
+    socket.on('disc', async (user) => {
+      await UserModel.findOneAndUpdate(
+        { _id: user._id },
+        { isOnline: false },
+        { new: true, runValidators: true },
+      ).exec();
+      const users = await UserModel.find({});
+      socket.emit('disc', users);
     });
 
     socket.on('leave', ({ roomId }: { roomId: string }) => {
