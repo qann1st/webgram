@@ -6,8 +6,6 @@ import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import DialogList from '../components/DialogList';
 import { useAppDispatch, useAppSelector } from '../hooks/index';
 import { setIsDialogsOpened } from '../store/slices/dialogsSlice';
-import { setUsersList } from '../store/slices/usersSlice';
-import { getUsers } from '../utils/Api';
 
 const Main: FC = () => {
   const dispatch = useAppDispatch();
@@ -17,16 +15,10 @@ const Main: FC = () => {
   const isDialogsOpened = useAppSelector((state) => state.dialogs.isDialogsOpened);
 
   useEffect(() => {
-    getUsers().then((users) => {
-      dispatch(setUsersList(users));
-    });
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
     if (!params.id) {
       dispatch(setIsDialogsOpened(true));
     }
+    // eslint-disable-next-line
   }, [params.id]);
 
   useEffect(() => {

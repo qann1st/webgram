@@ -1,6 +1,6 @@
 import { ArrowBack } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/joy';
-import { FC, memo, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../hooks/index';
 import { setIsDialogsOpened } from '../store/slices/dialogsSlice';
@@ -50,6 +50,7 @@ const Chat: FC = () => {
     return () => {
       socket.emit('leave', { roomId: params.id });
     };
+    // eslint-disable-next-line
   }, [params.id]);
 
   if (isLoading) {
