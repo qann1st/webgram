@@ -50,7 +50,7 @@ const Dialog: FC<IDialogProps> = ({ name, messages, _id, avatar }) => {
               sx={{
                 fontFamily: 'sans-serif, Noto Color Emoji',
                 fontSize: 16,
-                lineHeight: 1,
+                lineHeight: 1.1,
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',

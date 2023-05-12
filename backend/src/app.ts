@@ -6,7 +6,6 @@ import { MONGODB_URL, PORT } from './utils/constants';
 import { Server } from 'socket.io';
 import { AuthController } from './controllers/AuthController';
 import authorizationChecker from './checkers/authorization';
-import path from 'path';
 import { AuthErrorHandler } from './middlewares/AuthErrorHandler';
 import { HttpErrorHandler } from './middlewares/HttpErrorHandler';
 import { DefaultErrorHandler } from './middlewares/DefaultErrorHandler';

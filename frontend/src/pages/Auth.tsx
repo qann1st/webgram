@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import { useAppDispatch } from '../hooks/index';
 import { setUser } from '../store/slices/userSlice';
-import { getUserMe, signIn } from '../utils/Api';
+import { getUserMe, signIn, setToken } from '../utils/Api';
 import { LOCAL_STORAGE_JWT_KEY } from '../utils/constants';
 
 const Auth: FC = () => {
@@ -28,12 +28,13 @@ const Auth: FC = () => {
       if (res === undefined) {
         setIsErrorVisible(true);
       } else {
+        setToken(res.token);
+        localStorage.setItem(LOCAL_STORAGE_JWT_KEY, res.token);
         setIsErrorVisible(false);
         getUserMe().then((res) => {
           dispatch(setUser(res));
         });
         navigate('/messages');
-        localStorage.setItem(LOCAL_STORAGE_JWT_KEY, res.token);
       }
     });
   };

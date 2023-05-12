@@ -1,12 +1,13 @@
 import { Box, Button, FormControl, FormLabel, Input, Typography } from '@mui/joy';
 import { useColorScheme } from '@mui/joy/styles';
+import axios from 'axios';
 import { FC, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import { useAppDispatch } from '../hooks';
 import { setUser } from '../store/slices/userSlice';
-import { getUserMe, signIn, signUp } from '../utils/Api';
+import { getUserMe, signIn, signUp, setToken } from '../utils/Api';
 import { LOCAL_STORAGE_JWT_KEY } from '../utils/constants';
 
 const Register: FC = () => {
@@ -36,12 +37,13 @@ const Register: FC = () => {
           if (res === undefined) {
             setIsErrorVisible(true);
           } else {
+            setToken(res.token);
+            localStorage.setItem(LOCAL_STORAGE_JWT_KEY, res.token);
             setIsErrorVisible(false);
             getUserMe().then((res) => {
               dispatch(setUser(res));
             });
             navigate('/messages');
-            localStorage.setItem(LOCAL_STORAGE_JWT_KEY, res.token);
           }
         });
       }

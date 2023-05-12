@@ -30,7 +30,7 @@ const AppRouter: FC = () => {
         setIsLoading(false);
       });
     // eslint-disable-next-line
-  }, []);
+  }, [isAuth]);
 
   if (isLoading) {
     return <Loader />;

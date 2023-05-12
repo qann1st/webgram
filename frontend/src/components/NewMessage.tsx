@@ -1,7 +1,7 @@
 import { EmojiEmotions, Send } from '@mui/icons-material';
 import { Box, IconButton, Input } from '@mui/joy';
 import EmojiPicker, { EmojiStyle, Theme } from 'emoji-picker-react';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useAppSelector } from '../hooks';
 import { socket } from './AppRouter';

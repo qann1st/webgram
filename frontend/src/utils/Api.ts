@@ -5,9 +5,16 @@ const instance = axios.create({
   baseURL: 'https://webgram.api.qann1st.site/',
   headers: {
     'Access-Control': 'application/json',
-    Authorization: 'Bearer ' + localStorage.getItem(LOCAL_STORAGE_JWT_KEY),
+    Authorization: localStorage.getItem(LOCAL_STORAGE_JWT_KEY)
+      ? 'Bearer ' + localStorage.getItem(LOCAL_STORAGE_JWT_KEY)
+      : '',
   },
 });
+
+export const setToken = (token: string) => {
+  instance.defaults.headers.Authorization = 'Bearer ' + token;
+  instance.defaults.headers.common.Authorization = 'Bearer ' + token;
+};
 
 export const getUsers = () => {
   return instance

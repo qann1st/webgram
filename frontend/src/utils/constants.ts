@@ -1,1 +1,1 @@
-export const LOCAL_STORAGE_JWT_KEY = 'token';
+export const LOCAL_STORAGE_JWT_KEY = 'jwt_key';
