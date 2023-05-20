@@ -1,13 +1,15 @@
 import { Box, Divider, Typography } from '@mui/joy';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
+import { Socket } from 'socket.io-client';
 import Chat from '../components/Chat';
 import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import DialogList from '../components/DialogList';
 import { useAppDispatch, useAppSelector } from '../hooks/index';
 import { setIsDialogsOpened } from '../store/slices/dialogsSlice';
+import { setUsersList } from '../store/slices/usersSlice';
 
-const Main: FC = () => {
+const Main: FC<{ socketio: Socket }> = ({ socketio }) => {
   const dispatch = useAppDispatch();
   const params = useParams();
   const [isResize, setIsResize] = useState(false);
@@ -18,6 +20,7 @@ const Main: FC = () => {
     if (!params.id) {
       dispatch(setIsDialogsOpened(true));
     }
+
     // eslint-disable-next-line
   }, [params.id]);
 
@@ -96,7 +99,7 @@ const Main: FC = () => {
           },
         }}>
         {params.id ? (
-          <Chat />
+          <Chat socketio={socketio} />
         ) : (
           <Box
             sx={{

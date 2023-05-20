@@ -59,6 +59,7 @@ const userSchema = new mongoose.Schema<IUser, IUserModel>({
   },
   isOnline: {
     type: Boolean,
+    default: false,
   },
 });
 

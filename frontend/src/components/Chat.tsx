@@ -7,12 +7,12 @@ import { setIsDialogsOpened } from '../store/slices/dialogsSlice';
 import { addMessage, setMessages } from '../store/slices/messagesSlice';
 import { getRoomMessages } from '../utils/Api';
 import { IMessage } from '../utils/types';
-import { socket } from './AppRouter';
 import Loader from './Loader';
 import Message from './Message';
 import NewMessage from './NewMessage';
+import { Socket } from 'socket.io-client';
 
-const Chat: FC = () => {
+const Chat: FC<{ socketio: Socket }> = ({ socketio }) => {
   const params = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useAppDispatch();
@@ -39,16 +39,16 @@ const Chat: FC = () => {
         });
     }
 
-    socket.emit('join', { roomId: params.id });
+    socketio.emit('join', { roomId: params.id });
 
-    socket.on('message', (message: IMessage) => {
+    socketio.on('message', (message: IMessage) => {
       if (message.roomId === params.id) {
         dispatch(addMessage(message));
       }
     });
 
     return () => {
-      socket.emit('leave', { roomId: params.id });
+      socketio.emit('leave', { roomId: params.id });
     };
     // eslint-disable-next-line
   }, [params.id]);
@@ -102,7 +102,7 @@ const Chat: FC = () => {
               md: '30px',
             },
           }}>
-          {messages?.map((message: IMessage, i) => (
+          {messages?.map((message: IMessage) => (
             <Message
               key={message._id}
               owner={message.owner}
@@ -113,7 +113,7 @@ const Chat: FC = () => {
           <div ref={scrollRef}></div>
         </Box>
       )}
-      <NewMessage />
+      <NewMessage socketio={socketio} />
     </>
   );
 };

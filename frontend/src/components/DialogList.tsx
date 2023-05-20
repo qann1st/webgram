@@ -7,6 +7,8 @@ import { useAppDispatch } from '../hooks/index';
 import { getUsers } from '../utils/Api';
 import { setUsersList } from '../store/slices/usersSlice';
 import Loader from './Loader';
+import { useParams } from 'react-router';
+import { useQuery } from '@tanstack/react-query';
 
 const DialogList: FC = () => {
   const user = useAppSelector((state) => state.user.user);
@@ -14,6 +16,17 @@ const DialogList: FC = () => {
   const messages = useAppSelector((state) => state.messages.messages);
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
+  const params = useParams();
+
+  const { data } = useQuery({
+    queryFn: getUsers,
+    staleTime: 10000,
+    queryKey: ['users'],
+  });
+
+  useEffect(() => {
+    dispatch(setUsersList(data));
+  }, [data]);
 
   useEffect(() => {
     getUsers()
@@ -24,7 +37,7 @@ const DialogList: FC = () => {
         setIsLoading(false);
       });
     // eslint-disable-next-line
-  }, []);
+  }, [params.id]);
 
   if (isLoading) {
     return <Loader />;
@@ -55,6 +68,7 @@ const DialogList: FC = () => {
             _id={user._id}
             name={user.name}
             avatar={user.avatar}
+            isOnline={user.isOnline}
           />
         ))}
     </Box>

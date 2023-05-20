@@ -13,7 +13,7 @@ import currentUserChecker from './checkers/currentUser';
 import { UsersController } from './controllers/UsersController';
 import MessageModel, { IMessage } from './models/MessageModel';
 import { MessagesController } from './controllers/MessagesController';
-import UserModel from './models/UserModel';
+import UserModel, { IUser } from './models/UserModel';
 
 dotenv.config();
 
@@ -34,7 +34,15 @@ async function start(): Promise<void> {
   const server = app.listen(PORT, () => console.log(`Running on port ${PORT}`));
   const io = new Server(server, { cors: { origin: '*' } });
 
-  io.on('connection', (socket) => {
+  io.on('connection', async (socket) => {
+    if (socket.handshake.query.params) {
+      await UserModel.findByIdAndUpdate(
+        socket.handshake.query.params,
+        { isOnline: true },
+        { new: true, runValidators: true },
+      );
+    }
+
     socket.on('join', ({ roomId }: { roomId: string }) => {
       socket.join(roomId);
     });
@@ -46,24 +54,14 @@ async function start(): Promise<void> {
       socket.emit('message', message);
     });
 
-    socket.on('con', async (user) => {
-      await UserModel.findOneAndUpdate(
-        { _id: user._id },
-        { isOnline: true },
-        { new: true, runValidators: true },
-      ).exec();
-      const users = await UserModel.find({});
-      socket.emit('con', users);
-    });
-
-    socket.on('disc', async (user) => {
-      await UserModel.findOneAndUpdate(
-        { _id: user._id },
-        { isOnline: false },
-        { new: true, runValidators: true },
-      ).exec();
-      const users = await UserModel.find({});
-      socket.emit('disc', users);
+    socket.on('disconnect', async () => {
+      if (socket.handshake.query.params) {
+        await UserModel.findByIdAndUpdate(
+          socket.handshake.query.params,
+          { isOnline: false },
+          { new: true, runValidators: true },
+        );
+      }
     });
 
     socket.on('leave', ({ roomId }: { roomId: string }) => {

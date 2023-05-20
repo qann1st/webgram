@@ -3,10 +3,11 @@ export interface IUser {
   name: string;
   login?: string;
   avatar: string;
+  isOnline: boolean;
 }
 
 export interface IMessage {
-  _id?: string;
+  _id: string;
   owner: IUser;
   text: string;
   roomId?: string;

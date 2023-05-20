@@ -1,13 +1,13 @@
 import { EmojiEmotions, Send } from '@mui/icons-material';
 import { Box, IconButton, Input } from '@mui/joy';
 import EmojiPicker, { EmojiStyle, Theme } from 'emoji-picker-react';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import { useParams } from 'react-router';
 import { useAppSelector } from '../hooks';
-import { socket } from './AppRouter';
 import { useColorScheme } from '@mui/joy/styles';
+import { Socket } from 'socket.io-client';
 
-const NewMessage: FC = () => {
+const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
   const user = useAppSelector((state) => state.user.user);
   const { id } = useParams();
   const [value, setValue] = useState('');
@@ -19,12 +19,13 @@ const NewMessage: FC = () => {
   ) => {
     e.preventDefault();
     if (value.length > 0) {
-      socket.emit('message', {
+      socketio.emit('message', {
         owner: user,
         text: value,
         roomId: id,
       });
       setValue('');
+      setIsEmojiesOpened(false);
     }
   };
 
@@ -37,7 +38,7 @@ const NewMessage: FC = () => {
           boxSizing: 'content-box',
           width: '100%',
           display: 'flex',
-          gap: '10px',
+          alignItems: 'center',
         }}>
         <Box
           sx={{ width: '100%', display: 'flex', position: 'relative' }}
@@ -78,18 +79,18 @@ const NewMessage: FC = () => {
             )}
           </Box>
         </Box>
-      </Box>
-      <IconButton
-        onClick={(e) => handleSubmit(e)}
-        sx={{
-          cursor: 'pointer',
-          backgroundColor: 'transparent',
-          '&:hover': {
+        <IconButton
+          onClick={(e) => handleSubmit(e)}
+          sx={{
+            cursor: 'pointer',
             backgroundColor: 'transparent',
-          },
-        }}>
-        <Send />
-      </IconButton>
+            '&:hover': {
+              backgroundColor: 'transparent',
+            },
+          }}>
+          <Send />
+        </IconButton>
+      </Box>
     </Box>
   );
 };

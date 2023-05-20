@@ -1,5 +1,7 @@
 export const PORT = process.env.PORT || 4000;
-export const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost:27017/webgram';
+export const MONGODB_URL =
+  'mongodb+srv://OnlineStore:98Svu2AZzhDRiPz5@onlinestore.jhhxelb.mongodb.net/webgram' ??
+  'mongodb://localhost:27017/webgram';
 export const JWT_SECRET = process.env.JWT_SECRET || 'jwtsecretkey';
 
 export const CONFLICT_ERR_CODE = 409;

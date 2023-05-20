@@ -14,8 +14,8 @@ export class MessagesController {
   private async getLastMessage(@Params() { roomId }: { roomId: string }, @Res() res: Response) {
     const messages = await MessageModel.find({ roomId });
 
-    if (!messages) {
-      res.status(404);
+    if (messages.length === 0) {
+      res.status(200);
       return 'Пока сообщений нет';
     }
     return messages[messages.length - 1];

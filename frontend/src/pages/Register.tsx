@@ -1,6 +1,5 @@
 import { Box, Button, FormControl, FormLabel, Input, Typography } from '@mui/joy';
 import { useColorScheme } from '@mui/joy/styles';
-import axios from 'axios';
 import { FC, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
