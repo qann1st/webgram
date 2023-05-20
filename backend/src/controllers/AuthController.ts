@@ -103,7 +103,7 @@ export class AuthController {
         from: 'Webgram Support <webgram@mail.ru> ',
         to: email,
         subject: 'Восстановление пароля',
-        html: `<p>Чтобы восстановить пароль, перейдите по ссылке:</p> <p><a href="http://localhost:3000/reset-password/${randomToken}">Восстановить пароль</a></p>`,
+        html: `<p>Чтобы восстановить пароль, перейдите по ссылке:</p> <p><a href="https://webgram-three.vercel.app/reset-password/${randomToken}">Восстановить пароль</a></p>`,
       };
 
       transporter.sendMail(mailOptions, function (error, info) {
