@@ -4,47 +4,29 @@ import { FC, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import ColorSchemeToggle from '../components/ColorSchemeToggle';
-import { useAppDispatch } from '../hooks';
-import { setUser } from '../store/slices/userSlice';
-import { getUserMe, signIn, signUp, setToken } from '../utils/Api';
-import { LOCAL_STORAGE_JWT_KEY } from '../utils/constants';
+import { useAppDispatch } from '../hooks/index';
+import { forgotPassword } from '../utils/Api';
 
-const Register: FC = () => {
+const ForgotPassword: FC = () => {
   const [isErrorVisible, setIsErrorVisible] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const { mode } = useColorScheme();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formElements: any = e.currentTarget.elements;
 
     const data = {
       email: formElements.email.value,
-      password: formElements.password.value,
-      name: formElements.name.value,
-      login: formElements.login.value,
     };
 
-    signUp(data).then((res) => {
-      if (res === undefined) {
-        setIsErrorVisible(true);
+    forgotPassword(data).then((res) => {
+      if (!res.message) {
+        localStorage.setItem('email', data.email);
+        localStorage.setItem('uid', res);
+        navigate('/success-forgot');
       } else {
-        setIsErrorVisible(false);
-        navigate('/sign-in');
-        signIn({ email: data.email, password: data.password }).then((res) => {
-          if (res === undefined) {
-            setIsErrorVisible(true);
-          } else {
-            setToken(res.token);
-            localStorage.setItem(LOCAL_STORAGE_JWT_KEY, res.token);
-            setIsErrorVisible(false);
-            getUserMe().then((res) => {
-              dispatch(setUser(res));
-            });
-            navigate('/messages');
-          }
-        });
+        setIsErrorVisible(true);
       }
     });
   };
@@ -90,25 +72,13 @@ const Register: FC = () => {
         }}>
         <div>
           <Typography component="h2" fontSize="xl2" fontWeight="lg">
-            Регистрация
+            Восстановление пароля
           </Typography>
         </div>
-        <form onSubmit={handleSubmit}>
-          <FormControl required>
-            <FormLabel>Имя</FormLabel>
-            <Input placeholder="Введите имя" type="name" name="name" />
-          </FormControl>
+        <form style={{ gap: '12px' }} onSubmit={handleSubmit}>
           <FormControl required>
             <FormLabel>E-mail</FormLabel>
             <Input placeholder="Введите почту" type="email" name="email" />
-          </FormControl>
-          <FormControl required>
-            <FormLabel>Логин</FormLabel>
-            <Input placeholder="Введите ваш логин" type="login" name="login" />
-          </FormControl>
-          <FormControl required>
-            <FormLabel>Пароль</FormLabel>
-            <Input placeholder="•••••••" type="password" name="password" />
           </FormControl>
           <Box
             sx={{
@@ -118,14 +88,14 @@ const Register: FC = () => {
             }}>
             <Typography
               fontSize="14px"
-              fontFamily="sans-serif, Noto Color Emoji"
+              fontFamily="sans-serif"
               lineHeight="0.5"
-              sx={{ color: 'red', margin: 0, padding: 0 }}>
-              {isErrorVisible ? 'Неверно заполнены поля' : ''}
+              sx={{ color: 'red', margin: '3px 0 7px', padding: 0, height: 0 }}>
+              {isErrorVisible ? 'Такого пользователя не существует' : ''}
             </Typography>
           </Box>
           <Button type="submit" fullWidth>
-            Регистрация
+            Отправить письмо с восстановлением
           </Button>
         </form>
         <Link
@@ -133,13 +103,10 @@ const Register: FC = () => {
             textAlign: 'center',
             textDecoration: 'none',
             color: mode === 'dark' ? 'white' : 'black',
-            wordWrap: 'break-word',
             fontFamily: 'sans-serif',
-            fontSize: 16,
-            lineHeight: 1,
           }}
           to="/sign-in">
-          Уже зарегистрированы? Авторизация
+          Вернуться к авторизации
         </Link>
       </Box>
       <Box component="footer" sx={{ py: 3 }}></Box>
@@ -147,4 +114,4 @@ const Register: FC = () => {
   );
 };
 
-export default Register;
+export default ForgotPassword;

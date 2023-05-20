@@ -115,9 +115,23 @@ const Auth: FC = () => {
             textAlign: 'center',
             textDecoration: 'none',
             color: mode === 'dark' ? 'white' : 'black',
+            fontFamily: 'sans-serif',
           }}
           to="/sign-up">
           Ещё не зарегистрированы? Регистрация
+        </Link>
+        <Link
+          style={{
+            textAlign: 'center',
+            textDecoration: 'none',
+            color: mode === 'dark' ? 'white' : 'black',
+            wordWrap: 'break-word',
+            fontFamily: 'sans-serif',
+            fontSize: 16,
+            lineHeight: 1,
+          }}
+          to="/forgot-password">
+          Забыли пароль?
         </Link>
       </Box>
       <Box component="footer" sx={{ py: 3 }}></Box>

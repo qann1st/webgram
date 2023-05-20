@@ -11,6 +11,10 @@ import { getUserMe } from '../utils/Api';
 import AuthOutlet from './AuthOutlet';
 import Loader from './Loader';
 import PrivateOutlet from './PrivateOutlet';
+import ForgotPassword from '../pages/ForgotPassword';
+import { removeUser } from '../store/slices/userSlice';
+import ResetPassword from '../pages/ResetPassword';
+import Success from '../pages/Success';
 
 export const socket = (id: string) => {
   return io('http://localhost:4000', {
@@ -37,7 +41,7 @@ const AppRouter: FC = () => {
   useEffect(() => {
     getUserMe()
       .then((user) => {
-        if (user !== undefined) {
+        if (user) {
           dispatch(setUser(user));
         }
       })
@@ -60,6 +64,13 @@ const AppRouter: FC = () => {
       <Route element={<AuthOutlet isAuth={isAuth} />}>
         <Route path="/sign-in" element={<Auth />} />
         <Route path="/sign-up" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:uid" element={<ResetPassword />} />
+        <Route
+          path="/success-forgot"
+          element={<Success text={`Письмо успешно отправлено на почту`} />}
+        />
+        <Route path="/success-reset" element={<Success text={`Пароль успешно изменен`} />} />
       </Route>
       <Route path="*" element={<Navigate to="/messages" />} />
     </Routes>

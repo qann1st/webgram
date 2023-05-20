@@ -57,3 +57,17 @@ export const signUp = (body: object) => {
     .then((res) => res.data)
     .catch((err) => err.data);
 };
+
+export const forgotPassword = (body: object) => {
+  return instance
+    .post(`forgot-password`, body)
+    .then((res) => res.data)
+    .catch((err) => err);
+};
+
+export const resetPassword = (body: object, id: string) => {
+  return instance
+    .post(`reset-password/${id}`, body)
+    .then((res) => res.data)
+    .catch((err) => err);
+};

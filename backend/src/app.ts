@@ -35,7 +35,7 @@ async function start(): Promise<void> {
   const io = new Server(server, { cors: { origin: '*' } });
 
   io.on('connection', async (socket) => {
-    if (socket.handshake.query.params) {
+    if (socket.handshake.query.params === undefined) {
       await UserModel.findByIdAndUpdate(
         socket.handshake.query.params,
         { isOnline: true },
@@ -55,7 +55,7 @@ async function start(): Promise<void> {
     });
 
     socket.on('disconnect', async () => {
-      if (socket.handshake.query.params) {
+      if (socket.handshake.query.params === undefined) {
         await UserModel.findByIdAndUpdate(
           socket.handshake.query.params,
           { isOnline: false },
