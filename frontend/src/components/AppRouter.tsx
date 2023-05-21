@@ -17,7 +17,7 @@ import ResetPassword from '../pages/ResetPassword';
 import Success from '../pages/Success';
 
 export const socket = (id: string) => {
-  return io('http://localhost:4000', {
+  return io('https://webgram.api.qann1st.site', {
     query: {
       params: id,
     },
