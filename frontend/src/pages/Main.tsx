@@ -7,7 +7,6 @@ import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import DialogList from '../components/DialogList';
 import { useAppDispatch, useAppSelector } from '../hooks/index';
 import { setIsDialogsOpened } from '../store/slices/dialogsSlice';
-import { setUsersList } from '../store/slices/usersSlice';
 
 const Main: FC<{ socketio: Socket }> = ({ socketio }) => {
   const dispatch = useAppDispatch();

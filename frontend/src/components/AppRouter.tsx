@@ -12,12 +12,11 @@ import AuthOutlet from './AuthOutlet';
 import Loader from './Loader';
 import PrivateOutlet from './PrivateOutlet';
 import ForgotPassword from '../pages/ForgotPassword';
-import { removeUser } from '../store/slices/userSlice';
 import ResetPassword from '../pages/ResetPassword';
 import Success from '../pages/Success';
 
 export const socket = (id: string) => {
-  return io('http://localhost:4000', {
+  return io('https://webgram.api.qann1st.site', {
     query: {
       params: id,
     },
@@ -36,6 +35,7 @@ const AppRouter: FC = () => {
       e.preventDefault();
       socketio.disconnect();
     });
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {

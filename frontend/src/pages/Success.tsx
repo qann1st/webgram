@@ -8,6 +8,7 @@ const Success = ({ text }: { text: string }) => {
     setTimeout(() => {
       navigate('/sign-in');
     }, 3000);
+    // eslint-disable-next-line
   }, []);
 
   return (

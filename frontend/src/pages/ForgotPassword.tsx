@@ -4,7 +4,6 @@ import { FC, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import ColorSchemeToggle from '../components/ColorSchemeToggle';
-import { useAppDispatch } from '../hooks/index';
 import { forgotPassword } from '../utils/Api';
 
 const ForgotPassword: FC = () => {

@@ -1,13 +1,12 @@
 import { Box, Button, FormControl, FormLabel, Input, Typography } from '@mui/joy';
 import { useColorScheme } from '@mui/joy/styles';
-import { FC, FormEvent, useState } from 'react';
+import { FC, FormEvent } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import { resetPassword } from '../utils/Api';
 
 const ResetPassword: FC = () => {
-  const [isErrorVisible, setIsErrorVisible] = useState(false);
   const params = useParams();
   const { mode } = useColorScheme();
   const navigate = useNavigate();
