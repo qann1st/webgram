@@ -68,6 +68,7 @@ const Chat: FC<{ socketio: Socket }> = ({ socketio }) => {
         size="sm"
         variant="plain"
         sx={{
+          fontFamily: 'sans-serif, Noto Color Emoji',
           position: 'absolute',
           zIndex: 10,
           left: '10px',

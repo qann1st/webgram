@@ -33,7 +33,6 @@ async function start(): Promise<void> {
 
   io.on('connection', async (socket) => {
     if (socket.handshake.query.params) {
-      console.log(socket.handshake.query.params);
       await UserModel.findByIdAndUpdate(
         socket.handshake.query.params,
         { isOnline: true },

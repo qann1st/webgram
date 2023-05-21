@@ -78,7 +78,7 @@ const ResetPassword: FC = () => {
             <Input placeholder="•••••••" type="password" name="password" />
           </FormControl>
           <Button type="submit" fullWidth>
-            Отправить письмо с восстановлением
+            Изменить пароль
           </Button>
         </form>
         <Link

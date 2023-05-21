@@ -46,7 +46,7 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
           onSubmit={handleSubmit}>
           <Input
             size="lg"
-            sx={{ width: '100%' }}
+            sx={{ width: '100%', fontFamily: 'sans-serif, Noto Color Emoji' }}
             onChange={(e) => setValue(e.target.value)}
             value={value}
           />

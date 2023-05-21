@@ -65,7 +65,7 @@ const Main: FC<{ socketio: Socket }> = ({ socketio }) => {
           flex: 1,
         }}
         ref={sidebarRef}>
-        <DialogList />
+        <DialogList socketio={socketio} />
       </Box>
       <Divider
         onMouseDown={() => setIsResize(true)}

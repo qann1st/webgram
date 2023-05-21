@@ -7,16 +7,30 @@ import { useAppDispatch } from '../hooks/index';
 import { getUsers } from '../utils/Api';
 import { setUsersList } from '../store/slices/usersSlice';
 import Loader from './Loader';
-import { useParams } from 'react-router';
-import { useQuery } from '@tanstack/react-query';
 
-const DialogList: FC = () => {
+import { useQuery } from '@tanstack/react-query';
+import { Socket } from 'socket.io-client';
+import { useParams } from 'react-router';
+
+const DialogList: FC<{ socketio: Socket }> = ({ socketio }) => {
   const user = useAppSelector((state) => state.user.user);
   const users = useAppSelector((state) => state.users.users);
   const messages = useAppSelector((state) => state.messages.messages);
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const params = useParams();
+
+  const getUsersList = () => {
+    getUsers()
+      .then((users) => {
+        console.log(users);
+
+        dispatch(setUsersList(users));
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   const { data } = useQuery({
     queryFn: getUsers,
@@ -29,15 +43,21 @@ const DialogList: FC = () => {
   }, [data]);
 
   useEffect(() => {
-    getUsers()
-      .then((users) => {
-        dispatch(setUsersList(users));
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    getUsersList();
     // eslint-disable-next-line
   }, [params.id]);
+
+  useEffect(() => {
+    socketio.emit('join', '*');
+
+    socketio.on('message', () => {
+      getUsersList();
+    });
+
+    return () => {
+      socketio.emit('leave', '*');
+    };
+  }, []);
 
   if (isLoading) {
     return <Loader />;
