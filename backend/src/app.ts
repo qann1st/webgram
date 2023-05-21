@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import 'reflect-metadata';
 import { createExpressServer } from 'routing-controllers';
 import { MONGODB_URL, PORT } from './utils/constants';
@@ -13,9 +12,7 @@ import currentUserChecker from './checkers/currentUser';
 import { UsersController } from './controllers/UsersController';
 import MessageModel, { IMessage } from './models/MessageModel';
 import { MessagesController } from './controllers/MessagesController';
-import UserModel, { IUser } from './models/UserModel';
-
-dotenv.config();
+import UserModel from './models/UserModel';
 
 async function start(): Promise<void> {
   mongoose.set('strictQuery', false);
