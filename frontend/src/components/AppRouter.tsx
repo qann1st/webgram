@@ -16,7 +16,8 @@ import ResetPassword from '../pages/ResetPassword';
 import Success from '../pages/Success';
 
 export const socket = (id: string) => {
-  return io('https://webgram.api.qann1st.site', {
+  const socketUrl = process.env.REACT_APP_SOCKET_URL ?? '';
+  return io(socketUrl, {
     query: {
       params: id,
     },
