@@ -13,10 +13,11 @@ const ResetPassword: FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formElements: any = e.currentTarget.elements;
-
+    const formData = new FormData(e.currentTarget);
+    const formProps = Object.fromEntries(formData);
+    
     const data = {
-      newPassword: formElements.password.value,
+      newPassword: formProps.password,
       email: localStorage.getItem('email'),
       randomToken: localStorage.getItem('uid'),
     };

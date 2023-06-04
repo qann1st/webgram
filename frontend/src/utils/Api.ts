@@ -32,7 +32,7 @@ export const getUserMe = () => {
 
 export const getRoomMessages = (id: string) => {
   return instance
-    .get(`messages/${id}`)
+    .get(`messages/${id}/`)
     .then((res) => res.data)
     .catch((err) => err.data);
 };

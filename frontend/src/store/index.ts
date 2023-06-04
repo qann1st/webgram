@@ -3,12 +3,14 @@ import dialogsSlice from './slices/dialogsSlice';
 import messagesSlice from './slices/messagesSlice';
 import userReducer from './slices/userSlice';
 import usersReducer from './slices/usersSlice';
+import currentEnemy from './slices/currentEnemy';
 
 const rootReducer = combineReducers({
   users: usersReducer,
   user: userReducer,
   messages: messagesSlice,
   dialogs: dialogsSlice,
+  currentEnemy: currentEnemy,
 });
 
 export const store = configureStore({

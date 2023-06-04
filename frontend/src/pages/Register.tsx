@@ -17,22 +17,16 @@ const Register: FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formElements: any = e.currentTarget.elements;
+    const formData = new FormData(e.currentTarget);
+    const formProps = Object.fromEntries(formData);
 
-    const data = {
-      email: formElements.email.value,
-      password: formElements.password.value,
-      name: formElements.name.value,
-      login: formElements.login.value,
-    };
-
-    signUp(data).then((res) => {
+    signUp(formProps).then((res) => {
       if (res === undefined) {
         setIsErrorVisible(true);
       } else {
         setIsErrorVisible(false);
         navigate('/sign-in');
-        signIn({ email: data.email, password: data.password }).then((res) => {
+        signIn({ email: formProps.email, password: formProps.password }).then((res) => {
           if (res === undefined) {
             setIsErrorVisible(true);
           } else {

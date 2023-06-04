@@ -13,15 +13,12 @@ const ForgotPassword: FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formElements: any = e.currentTarget.elements;
+    const formData = new FormData(e.currentTarget);
+    const formProps = Object.fromEntries(formData);
 
-    const data = {
-      email: formElements.email.value,
-    };
-
-    forgotPassword(data).then((res) => {
+    forgotPassword(formProps).then((res) => {
       if (!res.message) {
-        localStorage.setItem('email', data.email);
+        localStorage.setItem('email', String(formProps.email));
         localStorage.setItem('uid', res);
         navigate('/success-forgot');
       } else {

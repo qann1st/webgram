@@ -6,11 +6,9 @@ import Dialog from './Dialog';
 import { useAppDispatch } from '../hooks/index';
 import { getUsers } from '../utils/Api';
 import { setUsersList } from '../store/slices/usersSlice';
-import Loader from './Loader';
-
-import { useQuery } from '@tanstack/react-query';
 import { Socket } from 'socket.io-client';
 import { useParams } from 'react-router';
+import Skeleton from './Skeleton';
 
 const DialogList: FC<{ socketio: Socket }> = ({ socketio }) => {
   const user = useAppSelector((state) => state.user.user);
@@ -23,8 +21,6 @@ const DialogList: FC<{ socketio: Socket }> = ({ socketio }) => {
   const getUsersList = () => {
     getUsers()
       .then((users) => {
-        console.log(users);
-
         dispatch(setUsersList(users));
       })
       .finally(() => {
@@ -32,18 +28,9 @@ const DialogList: FC<{ socketio: Socket }> = ({ socketio }) => {
       });
   };
 
-  const { data } = useQuery({
-    queryFn: getUsers,
-    staleTime: 10000,
-    queryKey: ['users'],
-  });
-
-  useEffect(() => {
-    dispatch(setUsersList(data));
-  }, [data]);
-
   useEffect(() => {
     getUsersList();
+    setInterval(() => getUsersList(), 4000);
     // eslint-disable-next-line
   }, [params.id]);
 
@@ -60,7 +47,27 @@ const DialogList: FC<{ socketio: Socket }> = ({ socketio }) => {
   }, []);
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <>
+        {new Array(6).fill(null).map((_, i) => (
+          <Skeleton
+            key={i}
+            sx={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '10px',
+              gap: '8px',
+            }}>
+            <Skeleton.Circle sx={{ width: '48px', height: '48px' }} />
+            <Box>
+              <Skeleton.Rectangle sx={{ width: '120px', height: '18px' }} />
+              <Skeleton.Rectangle sx={{ width: '60px', height: '12px', marginTop: '5px' }} />
+            </Box>
+          </Skeleton>
+        ))}
+      </>
+    );
   }
 
   return (

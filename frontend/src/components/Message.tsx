@@ -1,82 +1,87 @@
-import { Avatar, Box, Card, Typography } from '@mui/joy';
-import { intlFormatDistance } from 'date-fns';
-import { FC } from 'react';
+import { Box, Card, Typography } from '@mui/joy';
+import { FC, memo } from 'react';
 import { useAppSelector } from '../hooks';
 import { IUser } from '../utils/types';
+import Player from './WaveForm';
 
 interface IPropsMessage {
   owner: IUser;
   text: string;
   timestamp: number;
+  audio: string;
+  scrollRef: HTMLDivElement | null;
+  duration: number;
 }
 
-const Message: FC<IPropsMessage> = ({ owner, text, timestamp }) => {
-  const rtf = intlFormatDistance(new Date(timestamp), Date.now(), { locale: 'ru' });
+const Message: FC<IPropsMessage> = ({ owner, text, timestamp, audio, scrollRef, duration }) => {
+  const rtf = new Date(timestamp);
   const user = useAppSelector((state) => state.user.user);
+  const hours = rtf.getHours().toString();
+  const minutes = rtf.getMinutes().toString();
 
   return (
     <Box
       sx={{
         display: owner ? 'flex' : 'none',
         px: 2,
-        margin: '20px 0 0',
+        margin: '3px 0 0',
         gap: 1,
         justifyContent: 'flex-start',
-        ...(owner?._id === user?._id && {
+        ...(owner._id === user?._id && {
           flexDirection: 'row-reverse',
         }),
       }}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          color: 'gray',
-          fontWeight: 300,
-          padding: 1,
-          alignItems: 'center',
-          gap: 1,
-        }}>
-        <Avatar sx={{ width: '48px', height: '48px' }} src={owner?.avatar} alt={owner?.name} />
-        <Typography variant="soft">{rtf}</Typography>
-      </Box>
       <Card
         sx={{
           maxWidth: { xs: '60vw', md: '35vw' },
           display: 'flex',
           flexDirection: 'column',
           padding: { xs: 1, md: '10px' },
-          gap: 1,
           width: 'max-content',
+          ...(user?._id === owner._id
+            ? { borderBottomRightRadius: '0' }
+            : { borderBottomLeftRadius: '0' }),
         }}>
         <Box
           sx={{
             display: 'flex',
-            ...(owner._id === user?._id && {
-              justifyContent: 'end',
-              width: 'max-content',
-            }),
+            flexDirection: audio ? 'column' : 'flex',
+            alignItems: 'flex-end',
+            gap: '10px',
           }}>
-          <Typography
-            sx={{
-              lineHeight: '15px',
-              fontStyle: 'normal',
-              textAlign: 'justify',
-            }}>
-            {owner?.name}
-          </Typography>
+          {text ? (
+            <Typography
+              sx={{
+                wordWrap: 'break-word',
+                fontFamily: 'sans-serif, Noto Color Emoji',
+                fontSize: 16,
+                lineHeight: 1,
+              }}>
+              {text}
+            </Typography>
+          ) : (
+            <Player
+              scrollRef={scrollRef}
+              link={process.env.REACT_APP_API_URL + audio + '.wav'}
+              duration={duration}
+            />
+          )}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography
+              sx={{
+                wordWrap: 'break-word',
+                fontFamily: 'sans-serif, Noto Color Emoji',
+                fontSize: 10,
+                height: '5px',
+                marginTop: audio ? '-20px' : '',
+              }}>
+              {hours + ':' + (minutes.length === 1 ? 0 + minutes : minutes)}
+            </Typography>
+          </Box>
         </Box>
-        <Typography
-          sx={{
-            wordWrap: 'break-word',
-            fontFamily: 'sans-serif, Noto Color Emoji',
-            fontSize: 16,
-            lineHeight: 1,
-          }}>
-          {text}
-        </Typography>
       </Card>
     </Box>
   );
 };
 
-export default Message;
+export default memo(Message);

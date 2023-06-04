@@ -1,4 +1,4 @@
-import { Box, Divider, Typography } from '@mui/joy';
+import { Box, Divider, Typography, useColorScheme } from '@mui/joy';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { Socket } from 'socket.io-client';
@@ -14,6 +14,7 @@ const Main: FC<{ socketio: Socket }> = ({ socketio }) => {
   const [isResize, setIsResize] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const isDialogsOpened = useAppSelector((state) => state.dialogs.isDialogsOpened);
+  const { mode } = useColorScheme();
 
   useEffect(() => {
     if (!params.id) {
@@ -56,6 +57,8 @@ const Main: FC<{ socketio: Socket }> = ({ socketio }) => {
             xs: isDialogsOpened ? 'block' : 'none',
             md: 'block',
           },
+          position: 'relative',
+          borderRight: mode === 'dark' ? '1px solid #21262d' : '1px solid gray',
           maxWidth: {
             xs: '100%',
             md: '500px',
@@ -66,35 +69,59 @@ const Main: FC<{ socketio: Socket }> = ({ socketio }) => {
         }}
         ref={sidebarRef}>
         <DialogList socketio={socketio} />
+        <Divider
+          onMouseDown={() => setIsResize(true)}
+          orientation="vertical"
+          sx={{
+            width: '10px',
+            position: 'absolute',
+            top: 0,
+            right: '-5px',
+            zIndex: 2,
+            bottom: 0,
+            backgroundColor: 'transparent',
+            display: {
+              xs: 'none',
+              md: 'flex',
+            },
+            '&:hover': {
+              cursor: 'col-resize',
+            },
+            '&:active': {
+              cursor: 'col-resize',
+            },
+          }}
+        />
       </Box>
-      <Divider
-        onMouseDown={() => setIsResize(true)}
-        orientation="vertical"
-        sx={{
-          width: '7px',
-          display: {
-            xs: 'none',
-            md: 'flex',
-          },
-          '&:hover': {
-            backgroundColor: (theme) => theme.palette.primary.softHoverBg,
-            cursor: 'resize',
-          },
-          '&:active': {
-            cursor: 'resize',
-          },
-        }}
-      />
       <Box
         sx={{
           width: '100%',
-          backgroundColor: (theme) => theme.palette.primary[400],
+          background:
+            mode === 'dark'
+              ? '#0f0f0f'
+              : "url('https://web.telegram.org/a/chat-bg-br.f34cc96fbfb048812820.png')",
+          backgroundSize: 'cover',
           flex: 1,
+          zIndex: 1,
           height: '100vh',
+          position: 'relative',
           flexDirection: 'column',
           display: {
             xs: !isDialogsOpened ? 'flex' : 'none',
             md: 'flex',
+          },
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            backgroundSize: '700px auto',
+            zIndex: -1,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            filter: mode === 'dark' ? 'contrast(0.5)' : '',
+            backgroundImage:
+              "url('https://web.telegram.org/a/chat-bg-pattern-light.ee148af944f6580293ae.png')",
           },
         }}>
         {params.id ? (

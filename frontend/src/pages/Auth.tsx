@@ -17,14 +17,10 @@ const Auth: FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formElements: any = e.currentTarget.elements;
+    const formData = new FormData(e.currentTarget);
+    const formProps = Object.fromEntries(formData);
 
-    const data = {
-      email: formElements.email.value,
-      password: formElements.password.value,
-    };
-
-    signIn(data).then((res) => {
+    signIn(formProps).then((res) => {
       if (res === undefined) {
         setIsErrorVisible(true);
       } else {
