@@ -9,9 +9,11 @@ export interface IUser {
 
 export interface IMessage {
   owner: IUser;
-  text: string;
+  text?: string;
   roomId: string;
+  duration?: number;
   timestamp: number;
+  audio?: string;
 }
 
 const messageSchema = new mongoose.Schema<IMessage>({
@@ -21,8 +23,13 @@ const messageSchema = new mongoose.Schema<IMessage>({
   },
   text: {
     type: String,
-    required: true,
     minLength: 1,
+  },
+  audio: {
+    type: String,
+  },
+  duration: {
+    type: Number,
   },
   roomId: {
     type: String,

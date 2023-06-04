@@ -5,7 +5,7 @@ import MessageModel from '../models/MessageModel';
 @JsonController('/messages', { transformResponse: false })
 export class MessagesController {
   @Get('/:roomId')
-  private async getRoomMessages(@Params() { roomId }: { roomId: string }) {
+  private async getRoomMessages(@Params() { roomId, page }: { roomId: string; page: number }) {
     const messages = await MessageModel.find({ roomId });
     return messages;
   }

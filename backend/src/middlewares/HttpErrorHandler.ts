@@ -3,7 +3,7 @@ import { Middleware, ExpressErrorMiddlewareInterface, HttpError } from 'routing-
 
 @Middleware({ type: 'after', priority: 10 })
 export class HttpErrorHandler implements ExpressErrorMiddlewareInterface {
-  error(error: any, req: any, res: Response, next: (err?: any) => any): void {
+  error(error: Error, req: Request, res: Response, next: (err?: Error) => Error): void {
     if (error instanceof HttpError) {
       res.status(error.httpCode).send({ message: error.message });
       return;

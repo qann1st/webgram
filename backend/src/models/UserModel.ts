@@ -8,10 +8,11 @@ export interface IUser {
   email: string;
   password: string;
   isOnline: boolean;
+  lastOnline: number;
 }
 
 export interface IUserModel extends Model<IUser> {
-  findUserByIdOrLogin: (findValue: RefType) => any;
+  findUserByIdOrLogin: (findValue: RefType) => IUser;
 }
 
 const userSchema = new mongoose.Schema<IUser, IUserModel>({
@@ -60,6 +61,9 @@ const userSchema = new mongoose.Schema<IUser, IUserModel>({
   isOnline: {
     type: Boolean,
     default: false,
+  },
+  lastOnline: {
+    type: Number,
   },
 });
 

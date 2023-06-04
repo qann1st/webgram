@@ -40,6 +40,7 @@ export class AuthController {
   private async signup(@Body() { name, email, password, login }: IUser) {
     email = email.toLowerCase();
     login = login.toLowerCase();
+
     const find = await UserModel.findOne({ $or: [{ email }, { login }] })
       .select('+email')
       .exec();
@@ -50,6 +51,7 @@ export class AuthController {
     }
 
     const hashedPass = await bcrypt.hash(password, 10);
+    console.log('ffds');
     const user = new UserModel({ name, email, password: hashedPass, login });
     await user.validate();
     await user.save();
@@ -66,7 +68,7 @@ export class AuthController {
       randomToken,
     }: { email: string; newPassword: string; randomToken: string },
     @Params() { id }: { id: string },
-    @Req() req: any,
+    @Req() req: Request,
   ) {
     const hashedPass = await bcrypt.hash(newPassword, 10);
 
@@ -83,7 +85,11 @@ export class AuthController {
   }
 
   @Post('/forgot-password')
-  private async forgotPassword(@Body() { email }: IUser, @Res() res: Response, @Req() req: any) {
+  private async forgotPassword(
+    @Body() { email }: IUser,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
     const findEmail = await UserModel.find({ email });
     if (findEmail[0]) {
       const randomToken = uuidv4();

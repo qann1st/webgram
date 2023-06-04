@@ -19,4 +19,4 @@ export const AUTH_ERROR = 'Неверная почта или пароль';
 export const AUTH_REQUIRED = 'Необходимо авторизоваться';
 export const BAD_TOKEN = 'Неверный токен';
 export const BAD_TOKEN_TYPE = 'Неверный тип токена';
-export const INTERNAL_ERROR = 'Возможно произошла ошибка';
+export const INTERNAL_ERROR = 'На сервере произошла ошибка';

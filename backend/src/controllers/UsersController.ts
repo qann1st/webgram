@@ -1,4 +1,4 @@
-import { HydratedDocument } from 'mongoose';
+import { Error, HydratedDocument } from 'mongoose';
 import {
   Authorized,
   BadRequestError,
@@ -13,7 +13,7 @@ import UserModel, { IUser } from '../models/UserModel';
 @JsonController('/users', { transformResponse: false })
 export class UsersController {
   @Get('/me')
-  private async getUserMe(@CurrentUser() user: HydratedDocument<IUser>): Promise<any> {
+  private async getUserMe(@CurrentUser() user: HydratedDocument<IUser>) {
     return user;
   }
 
@@ -37,8 +37,10 @@ export class UsersController {
         { name, login, avatar },
         { new: true, runValidators: true },
       ).exec();
-    } catch (e: any) {
-      throw new BadRequestError(e.message);
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new BadRequestError(e.message);
+      }
     }
 
     if (updated !== undefined && updated !== null) {
@@ -50,7 +52,7 @@ export class UsersController {
 
   @Authorized(['user'])
   @Get('')
-  private async getUsers(): Promise<any> {
+  private async getUsers() {
     const users = await UserModel.find({});
     return users;
   }
