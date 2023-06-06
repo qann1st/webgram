@@ -59,17 +59,23 @@ async function start(): Promise<void> {
         const timestamp = new Date();
         const uid = uuidv4();
 
-        writeFile(`src/controllers/${uid}.wav`, audioBlob.data, async () => {
-          const message: IMessage = await MessageModel.create({
-            owner,
-            audio: uid,
-            duration: audioBlob.duration,
-            roomId,
-            timestamp,
-          });
-          socket.to(roomId).emit('message', message);
-          socket.emit('message', message);
-        });
+        writeFile(
+          process.env.npm_lifecycle_event === 'dev'
+            ? `src/controllers/${uid}.wav`
+            : `controllers/${uid}.wav`,
+          audioBlob.data,
+          async () => {
+            const message: IMessage = await MessageModel.create({
+              owner,
+              audio: uid,
+              duration: audioBlob.duration,
+              roomId,
+              timestamp,
+            });
+            socket.to(roomId).emit('message', message);
+            socket.emit('message', message);
+          },
+        );
       } catch (err) {
         console.error(err);
       }
