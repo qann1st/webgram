@@ -65,8 +65,17 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
 
   function handleRecord() {
     setIsWritable(true);
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
+    navigator.permissions
+      .query({ name: 'microphone' as PermissionName })
+      .then((result) => {
+        if (result.state === 'granted') {
+          return navigator.mediaDevices.getUserMedia({ audio: true });
+        } else if (result.state === 'prompt') {
+          return navigator.mediaDevices.getUserMedia({ audio: true });
+        } else {
+          throw new Error('Permission not granted');
+        }
+      })
       .then(function (stream) {
         let options;
         if (MediaRecorder.isTypeSupported('video/webm; codecs=vp9')) {
