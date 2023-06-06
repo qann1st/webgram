@@ -40,40 +40,18 @@ const Chat: FC<{ socketio: Socket }> = ({ socketio }) => {
   }, [messages, isLoading, isDialogsOpened]);
 
   useEffect(() => {
-    setIsLoading(true);
     if (params.id) {
-      const arr = sessionStorage.getItem(params.id);
-      if (arr) {
-        if (arr.length > 2) {
-          const messages: IMessage[] = JSON.parse(arr);
+      setIsLoading(true);
+      getRoomMessages(params.id)
+        .then((data) => {
+          if (params.id) {
+            sessionStorage.setItem(params.id, JSON.stringify(data));
+          }
+          dispatch(setMessages(data));
+        })
+        .finally(() => {
           setIsLoading(false);
-          dispatch(setMessages(messages));
-        } else {
-          setIsLoading(true);
-          getRoomMessages(params.id)
-            .then((data) => {
-              if (params.id) {
-                sessionStorage.setItem(params.id, JSON.stringify(data));
-              }
-              dispatch(setMessages(data));
-            })
-            .finally(() => {
-              setIsLoading(false);
-            });
-        }
-      } else {
-        setIsLoading(true);
-        getRoomMessages(params.id)
-          .then((data) => {
-            if (params.id) {
-              sessionStorage.setItem(params.id, JSON.stringify(data));
-            }
-            dispatch(setMessages(data));
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-      }
+        });
     }
 
     socketio.emit('join', { roomId: params.id });

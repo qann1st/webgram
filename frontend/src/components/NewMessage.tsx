@@ -79,6 +79,7 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
           console.error('no suitable mimetype found for this device');
         }
         const recordedChunks: Blob[] = [];
+
         const mediaRecorder = new MediaRecorder(stream, options);
 
         mediaRecorder.start();
