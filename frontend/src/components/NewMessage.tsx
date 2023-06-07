@@ -18,6 +18,7 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
   const [isWritable, setIsWritable] = useState(false);
   const [recordingData, setRecordingData] = useState<{ data: Blob; duration: number } | null>(null);
   const [timer, setTimer] = useState('00:00');
+  const voiceRef = useRef<HTMLButtonElement>(null);
   const { mode } = useColorScheme();
   const [isRecording, setIsRecording] = useState(false);
   const stopVoiceRef = useRef<HTMLButtonElement>(null);
@@ -63,8 +64,16 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
     }
   }, [isRecording]);
 
-  function handleRecord() {
-    setIsWritable(true);
+  useEffect(() => {
+    if (voiceRef.current) {
+      voiceRef.current.addEventListener('click', () => {
+        setIsWritable(true);
+        startRecord();
+      });
+    }
+  }, []);
+
+  function startRecord() {
     navigator.permissions
       .query({ name: 'microphone' as PermissionName })
       .then((result) => {
@@ -77,18 +86,30 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
         }
       })
       .then(function (stream) {
-        let options;
-        if (MediaRecorder.isTypeSupported('video/webm; codecs=vp9')) {
-          options = { mimeType: 'video/webm; codecs=vp9', audioBitsPerSecond: 128000 };
-        } else if (MediaRecorder.isTypeSupported('video/webm')) {
-          options = { mimeType: 'video/webm', audioBitsPerSecond: 128000 };
-        } else if (MediaRecorder.isTypeSupported('video/mp4')) {
-          options = { mimeType: 'video/mp4', audioBitsPerSecond: 128000 };
-        } else {
-          console.error('no suitable mimetype found for this device');
-        }
-        const recordedChunks: Blob[] = [];
+        let options: {
+          mimeType?: string;
+          audioBitsPerSecond: number;
+        } = { audioBitsPerSecond: 128000 };
+        
+        const types = [
+          'video/webm',
+          'audio/webm',
+          'video/webm;codecs=vp8',
+          'video/webm;codecs=daala',
+          'video/webm;codecs=h264',
+          'audio/webm;codecs=opus',
+          'video/mpeg',
+        ];
 
+        for (const type of types) {
+          if (MediaRecorder.isTypeSupported(type)) {
+            options.mimeType = type;
+          } else {
+            continue;
+          }
+        }
+
+        const recordedChunks: Blob[] = [];
         const mediaRecorder = new MediaRecorder(stream, options);
 
         mediaRecorder.start();
@@ -257,7 +278,7 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
           {value.length === 0 ? (
             <>
               <IconButton
-                onClick={handleRecord}
+                ref={voiceRef}
                 sx={{
                   cursor: 'pointer',
                   backgroundColor: 'transparent',
