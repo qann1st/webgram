@@ -1,4 +1,4 @@
-import { EmojiEmotions, Mic, Remove, Send, Stop } from '@mui/icons-material';
+import { DeleteForeverOutlined, EmojiEmotions, Mic, Send, Stop } from '@mui/icons-material';
 import { Box, IconButton, Input, Typography } from '@mui/joy';
 import EmojiPicker, { EmojiStyle, Theme } from 'emoji-picker-react';
 import { FC, useEffect, useRef, useState } from 'react';
@@ -90,7 +90,7 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
           mimeType?: string;
           audioBitsPerSecond: number;
         } = { audioBitsPerSecond: 128000 };
-        
+
         const types = [
           'video/webm',
           'audio/webm',
@@ -132,8 +132,9 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
             this.removeEventListener('click', onStopClick);
           });
       })
-      .catch(function (error) {
+      .catch((error) => {
         alert('Разрешите использовать микрофон');
+        setIsWritable(false);
         console.error(error);
       });
   }
@@ -241,7 +242,7 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
                 backgroundColor: 'transparent',
               },
             }}>
-            <Remove />
+            <DeleteForeverOutlined />
           </IconButton>
           <IconButton
             ref={stopVoiceRef}

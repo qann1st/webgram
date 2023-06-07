@@ -24,6 +24,7 @@ const Player: FC<IPlayerProps & BoxProps> = ({
   const [timer, setTimer] = useState('');
   const [currentTime, setCurrentTime] = useState(0);
   const [isVoiceLoading, setIsVoiceLoading] = useState(true);
+  const [isTimer, setIsTimer] = useState(false);
   const [currentTimer, setCurrentTimer] = useState('');
   const el = useRef<HTMLDivElement>(null);
 
@@ -65,13 +66,18 @@ const Player: FC<IPlayerProps & BoxProps> = ({
       setIsVoiceLoading(false);
     });
 
-    _wavesurfer.on('audioprocess', function () {
+    _wavesurfer.on('audioprocess', () => {
       setCurrentTime(_wavesurfer.getDuration() - _wavesurfer.getCurrentTime());
     });
 
-    _wavesurfer.on('finish', function () {
+    _wavesurfer.on('pause', () => {
+      setIsTimer(true);
+    });
+
+    _wavesurfer.on('finish', () => {
       _wavesurfer?.stop();
       setPlaying(false);
+      setIsTimer(false);
       setDuration(_wavesurfer.getDuration());
     });
 
@@ -148,7 +154,7 @@ const Player: FC<IPlayerProps & BoxProps> = ({
               lineHeight: 1,
               paddingTop: '6px',
             }}>
-            {timer} {playing ? '/ ' + currentTimer : ''}
+            {timer} {playing || isTimer ? '/ ' + currentTimer : ''}
           </Typography>
         </Box>
       </Box>
