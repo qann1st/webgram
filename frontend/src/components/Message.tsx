@@ -61,6 +61,7 @@ const Message: FC<IPropsMessage> = ({ owner, text, timestamp, audio, scrollRef, 
             </Typography>
           ) : (
             <Player
+              isInput={false}
               scrollRef={scrollRef}
               link={process.env.REACT_APP_API_URL + audio + '.wav'}
               duration={duration}

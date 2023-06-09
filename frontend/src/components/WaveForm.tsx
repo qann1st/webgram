@@ -9,6 +9,7 @@ interface IPlayerProps {
   link: string;
   scrollRef?: HTMLDivElement | null;
   duration: number;
+  isInput: boolean;
 }
 
 const Player: FC<IPlayerProps & BoxProps> = ({
@@ -17,6 +18,7 @@ const Player: FC<IPlayerProps & BoxProps> = ({
   duration: durationMessage,
   sx,
   width = '200px',
+  isInput,
 }) => {
   const [wavesurfer, setWavesurfer] = useState<WaveSurfer>();
   const [playing, setPlaying] = useState(false);
@@ -85,6 +87,7 @@ const Player: FC<IPlayerProps & BoxProps> = ({
       _wavesurfer.unAll();
       _wavesurfer.destroy();
     };
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -98,6 +101,7 @@ const Player: FC<IPlayerProps & BoxProps> = ({
         Math.trunc(clocks.seconds) < 10 ? 0 : ''
       }${Math.trunc(clocks.seconds)}`,
     );
+    // eslint-disable-next-line
   }, [duration, wavesurfer]);
 
   useEffect(() => {
@@ -109,6 +113,7 @@ const Player: FC<IPlayerProps & BoxProps> = ({
         }${Math.trunc(clocks.seconds)}`,
       );
     }
+    // eslint-disable-next-line
   }, [currentTime]);
 
   const handlePlay = () => {
@@ -144,18 +149,31 @@ const Player: FC<IPlayerProps & BoxProps> = ({
         <IconButton color="primary" size="sm" onClick={handlePlay} sx={{ padding: 0 }}>
           {playing ? <PauseCircleFilledOutlined /> : <PlayCircleFilledOutlined />}
         </IconButton>
-        <Box>
-          <Box width={width} ref={el} />
-          <Typography
-            sx={{
-              wordWrap: 'break-word',
-              fontFamily: 'sans-serif, Noto Color Emoji',
-              fontSize: 16,
-              lineHeight: 1,
-              paddingTop: '6px',
-            }}>
-            {timer} {playing || isTimer ? '/ ' + currentTimer : ''}
-          </Typography>
+        <Box sx={sx}>
+          <Box ref={el} width={width} />
+          {isInput ? (
+            <Typography
+              sx={{
+                wordWrap: 'break-word',
+                fontFamily: 'sans-serif, Noto Color Emoji',
+                fontSize: 16,
+                lineHeight: 1,
+                paddingTop: '6px',
+              }}>
+              {playing || isTimer ? currentTimer : timer}
+            </Typography>
+          ) : (
+            <Typography
+              sx={{
+                wordWrap: 'break-word',
+                fontFamily: 'sans-serif, Noto Color Emoji',
+                fontSize: 16,
+                lineHeight: 1,
+                paddingTop: '6px',
+              }}>
+              {timer} {playing || isTimer ? '/ ' + currentTimer : ''}
+            </Typography>
+          )}
         </Box>
       </Box>
     </>

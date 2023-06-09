@@ -44,6 +44,7 @@ const DialogList: FC<{ socketio: Socket }> = ({ socketio }) => {
     return () => {
       socketio.emit('leave', '*');
     };
+    // eslint-disable-next-line
   }, []);
 
   if (isLoading) {

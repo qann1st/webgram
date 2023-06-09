@@ -18,7 +18,6 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
   const [isWritable, setIsWritable] = useState(false);
   const [recordingData, setRecordingData] = useState<{ data: Blob; duration: number } | null>(null);
   const [timer, setTimer] = useState('00:00');
-  const voiceRef = useRef<HTMLButtonElement>(null);
   const { mode } = useColorScheme();
   const [isRecording, setIsRecording] = useState(false);
   const stopVoiceRef = useRef<HTMLButtonElement>(null);
@@ -63,15 +62,6 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
       return () => clearInterval(interval);
     }
   }, [isRecording]);
-
-  useEffect(() => {
-    if (voiceRef.current) {
-      voiceRef.current.addEventListener('click', () => {
-        setIsWritable(true);
-        startRecord();
-      });
-    }
-  }, []);
 
   function startRecord() {
     navigator.permissions
@@ -141,89 +131,19 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
 
   return (
     <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-      <Box
-        sx={{
-          backgroundColor: 'transparent',
-          padding: '0 5px 5px',
-          boxSizing: 'content-box',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-        }}>
+      {isPlaying ? (
         <Box
-          sx={{ width: '100%', display: 'flex', position: 'relative' }}
           component="form"
-          onSubmit={handleSubmit}>
-          {isPlaying && recordingData && (
-            <Player
-              sx={{
-                position: 'absolute',
-                zIndex: 1,
-                left: '40px',
-                top: '3px',
-              }}
-              link={URL.createObjectURL(recordingData.data)}
-              duration={recordingData.duration}
-            />
-          )}
-          <Box
-            sx={{
-              width: '10px',
-              height: '10px',
-              backgroundColor: 'rgb(255, 60, 50)',
-              position: 'absolute',
-              zIndex: 1,
-              top: '24px',
-              left: '18px',
-              borderRadius: '50%',
-              display: isRecording ? 'block' : 'none',
-              animation: 'infinite 1.5s recording',
-              '@keyframes recording': {
-                '0%': { opacity: 1 },
-                '50%': { opacity: 0 },
-                '100%': { opacity: 1 },
-              },
-            }}
-          />
-          <Typography
-            sx={{
-              cursor: 'pointer',
-              position: 'absolute',
-              top: '18px',
-              zIndex: 1,
-              left: '32px',
-              display: isRecording ? 'block' : 'none',
-            }}>
-            {timer}
-          </Typography>
-          <Input
-            size="lg"
-            placeholder={isRecording || isPlaying ? '' : 'Сообщение'}
-            sx={{
-              width: '100%',
-              height: '60px',
-              fontFamily: 'sans-serif, Noto Color Emoji',
-            }}
-            onChange={(e) => setValue(e.target.value)}
-            value={value}
-            readOnly={isWritable}
-          />
-          <IconButton
-            onClick={() => setIsEmojiesOpened((prev) => !prev)}
-            sx={{
-              cursor: 'pointer',
-              position: 'absolute',
-              display: { xs: 'none', md: isRecording || isPlaying ? 'none' : 'flex' },
-              right: '40px',
-              top: '10px',
-              border: 'none',
-              backgroundColor: 'transparent',
-              '&:hover': {
-                backgroundColor: 'transparent',
-              },
-            }}>
-            <EmojiEmotions />
-          </IconButton>
+          onSubmit={handleSubmit}
+          sx={{
+            display: 'flex',
+            backgroundColor: mode === 'dark' ? '#09090D' : '#fff',
+            width: '100%',
+            margin: '5px',
+            padding: '5px',
+            borderRadius: '10px',
+            alignItems: 'center',
+          }}>
           <IconButton
             onClick={() => {
               setIsPlaying(false);
@@ -232,10 +152,7 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
             }}
             sx={{
               cursor: 'pointer',
-              position: 'absolute',
-              display: { xs: 'none', md: isPlaying ? 'flex' : 'none' },
-              left: '4px',
-              top: '10px',
+              display: { xs: 'none', md: 'flex' },
               border: 'none',
               backgroundColor: 'transparent',
               '&:hover': {
@@ -244,92 +161,175 @@ const NewMessage: FC<{ socketio: Socket }> = ({ socketio }) => {
             }}>
             <DeleteForeverOutlined />
           </IconButton>
-          <IconButton
-            ref={stopVoiceRef}
-            sx={{
-              cursor: 'pointer',
-              backgroundColor: 'transparent',
-              border: 'none',
-              position: 'absolute',
-              top: '10px',
-              right: '5px',
-              display: isRecording ? 'flex' : 'none',
-              '&:hover': {
-                backgroundColor: 'transparent',
-              },
-            }}>
-            <Stop />
-          </IconButton>
+          {recordingData && (
+            <Player
+              sx={{ width: '100%', padding: '0 10px', display: 'flex', gap: '10px' }}
+              width="100%"
+              isInput={true}
+              link={URL.createObjectURL(recordingData.data)}
+              duration={recordingData.duration}
+            />
+          )}
           <IconButton
             type="submit"
             sx={{
               cursor: 'pointer',
               backgroundColor: 'transparent',
               border: 'none',
-              position: 'absolute',
-              top: '10px',
-              right: '5px',
-              display: isPlaying ? 'flex' : 'none',
+              display: 'flex',
               '&:hover': {
                 backgroundColor: 'transparent',
               },
             }}>
             <Send />
           </IconButton>
-          {value.length === 0 ? (
-            <>
-              <IconButton
-                ref={voiceRef}
-                sx={{
-                  cursor: 'pointer',
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  position: 'absolute',
-                  top: '10px',
-                  right: '5px',
-                  display: isRecording || isPlaying ? 'none' : 'flex',
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                  },
-                }}>
-                <Mic />
-              </IconButton>
-            </>
-          ) : (
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            backgroundColor: 'transparent',
+            padding: '0 5px 5px',
+            boxSizing: 'content-box',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+          }}>
+          <Box
+            sx={{ width: '100%', display: 'flex', position: 'relative' }}
+            component="form"
+            onSubmit={handleSubmit}>
+            <Box
+              sx={{
+                width: '10px',
+                height: '10px',
+                backgroundColor: 'rgb(255, 60, 50)',
+                position: 'absolute',
+                zIndex: 1,
+                top: '19px',
+                left: '18px',
+                borderRadius: '50%',
+                display: isRecording ? 'block' : 'none',
+                animation: 'infinite 1.5s recording',
+                '@keyframes recording': {
+                  '0%': { opacity: 1 },
+                  '50%': { opacity: 0 },
+                  '100%': { opacity: 1 },
+                },
+              }}
+            />
+            <Typography
+              sx={{
+                cursor: 'pointer',
+                position: 'absolute',
+                top: '13px',
+                zIndex: 1,
+                left: '32px',
+                display: isRecording ? 'block' : 'none',
+              }}>
+              {timer}
+            </Typography>
+            <Input
+              size="lg"
+              placeholder={isRecording || isPlaying ? '' : 'Сообщение'}
+              sx={{
+                width: '100%',
+                height: '50px',
+                fontFamily: 'sans-serif, Noto Color Emoji',
+              }}
+              onChange={(e) => setValue(e.target.value)}
+              value={value}
+              readOnly={isWritable}
+            />
             <IconButton
-              type="submit"
+              onClick={() => setIsEmojiesOpened((prev) => !prev)}
+              sx={{
+                cursor: 'pointer',
+                position: 'absolute',
+                display: { xs: 'none', md: isRecording || isPlaying ? 'none' : 'flex' },
+                right: '40px',
+                top: '4px',
+                border: 'none',
+                backgroundColor: 'transparent',
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                },
+              }}>
+              <EmojiEmotions />
+            </IconButton>
+            <IconButton
+              ref={stopVoiceRef}
               sx={{
                 cursor: 'pointer',
                 backgroundColor: 'transparent',
                 border: 'none',
                 position: 'absolute',
-                top: '10px',
+                top: '4px',
                 right: '5px',
+                display: isRecording ? 'flex' : 'none',
                 '&:hover': {
                   backgroundColor: 'transparent',
                 },
               }}>
-              <Send />
+              <Stop />
             </IconButton>
-          )}
-          <Box
-            onMouseLeave={() => setIsEmojiesOpened(false)}
-            sx={{ position: 'absolute', bottom: '60px', right: 0 }}>
-            {isEmojiesOpened && (
-              <EmojiPicker
-                lazyLoadEmojis
-                searchDisabled
-                skinTonesDisabled
-                theme={mode === 'dark' ? Theme.DARK : Theme.LIGHT}
-                emojiStyle={EmojiStyle.GOOGLE}
-                onEmojiClick={(e) => {
-                  setValue((prev) => prev + e.emoji);
-                }}
-              />
+            {value.length === 0 ? (
+              <>
+                <IconButton
+                  onClick={() => {
+                    setIsWritable(true);
+                    startRecord();
+                  }}
+                  sx={{
+                    cursor: 'pointer',
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    position: 'absolute',
+                    top: '4px',
+                    right: '5px',
+                    display: isRecording || isPlaying ? 'none' : 'flex',
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                    },
+                  }}>
+                  <Mic />
+                </IconButton>
+              </>
+            ) : (
+              <IconButton
+                type="submit"
+                sx={{
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  position: 'absolute',
+                  top: '4px',
+                  right: '5px',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                  },
+                }}>
+                <Send />
+              </IconButton>
             )}
+            <Box
+              onMouseLeave={() => setIsEmojiesOpened(false)}
+              sx={{ position: 'absolute', bottom: '60px', right: 0, zIndex: 5 }}>
+              {isEmojiesOpened && (
+                <EmojiPicker
+                  lazyLoadEmojis
+                  searchDisabled
+                  skinTonesDisabled
+                  theme={mode === 'dark' ? Theme.DARK : Theme.LIGHT}
+                  emojiStyle={EmojiStyle.GOOGLE}
+                  onEmojiClick={(e) => {
+                    setValue((prev) => prev + e.emoji);
+                  }}
+                />
+              )}
+            </Box>
           </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 };

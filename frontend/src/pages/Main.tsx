@@ -29,7 +29,9 @@ const Main: FC<{ socketio: Socket }> = ({ socketio }) => {
       setIsResize(false);
     };
 
-    window.addEventListener('mousemove', resizeSidebar);
+    if (isResize) {
+      window.addEventListener('mousemove', resizeSidebar);
+    }
     window.addEventListener('mouseup', resize);
 
     return () => {
